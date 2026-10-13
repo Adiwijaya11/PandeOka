@@ -17,13 +17,19 @@
                 </p>
 
                 <p class="text-xs sm:text-sm text-stone-600 leading-relaxed max-w-md">
-                    Spesialis furniture kayu solid berkualitas tinggi dengan desain modern minimalis. Dibuat langsung oleh pengrajin profesional dari Jepara &amp; Bali untuk menghadirkan kenyamanan dan ketahanan maksimal di rumah Anda.
+                    Spesialis furniture kayu solid berkualitas tinggi dengan desain modern minimalis. Dibuat langsung oleh pengrajin profesional di Bali untuk menghadirkan kenyamanan dan ketahanan maksimal di rumah Anda.
                 </p>
 
                 <div class="pt-2 space-y-1 text-xs text-stone-600">
-                    <p class="font-bold text-stone-900 uppercase tracking-wider text-[11px]">Showroom &amp; Workshop:</p>
-                    <p>Jl. Raya Jepara - Kudus KM 8, Tahunan, Jepara, Jawa Tengah</p>
-                    <p>Branch Bali: Jl. Sunset Road No. 88, Kuta, Badung, Bali</p>
+                    <p class="font-bold text-stone-900 uppercase tracking-wider text-[11px] flex items-center gap-1.5">
+                        <svg class="w-3.5 h-3.5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                        Showroom &amp; Workshop Bali:
+                    </p>
+                    <p>Jl. Sunset Road No. 88, Kuta, Kabupaten Badung, Bali 80361</p>
+                    <p class="text-[11px] text-stone-500">Workshop &amp; Studio Desain: Jl. Raya Andong, Ubud, Gianyar, Bali</p>
                 </div>
 
                 <div class="flex items-center space-x-2 pt-2">
@@ -79,9 +85,9 @@
                     Newsletter
                 </h3>
                 <p class="text-xs text-stone-600 mb-3 leading-relaxed">
-                    Dapatkan katalog terbaru dan voucher potongan Rp 250.000 untuk pembelian pertama Anda.
+                    Dapatkan katalog produk terbaru dan inspirasi penataan ruang langsung ke email Anda.
                 </p>
-                <form onsubmit="event.preventDefault(); alert('Terima kasih! Voucher diskon telah dikirimkan ke email Anda.');" class="space-y-2">
+                <form onsubmit="event.preventDefault(); alert('Terima kasih! Katalog terbaru telah dikirimkan ke email Anda.');" class="space-y-2">
                     <input type="email" 
                            placeholder="Alamat email Anda..." 
                            required

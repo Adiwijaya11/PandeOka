@@ -42,8 +42,8 @@
                     Selamat! Pesanan Anda memenuhi syarat <strong>Bebas Ongkir &amp; Instalasi Area Jawa - Bali</strong>.
                 </span>
             </div>
-            <a href="#promo" class="text-orange-600 font-bold hover:underline shrink-0 flex items-center gap-1">
-                <span>Pelajari Promo</span>
+            <a href="{{ url('/') }}" class="text-orange-600 font-bold hover:underline shrink-0 flex items-center gap-1">
+                <span>Lanjut Belanja</span>
                 <span>&rarr;</span>
             </a>
         </div>
