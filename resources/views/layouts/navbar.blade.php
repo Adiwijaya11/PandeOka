@@ -1,5 +1,5 @@
 {{-- Sticky Site Header Wrapper (Fully Responsive, Zero Horizontal Overflow) --}}
-<div id="site-header-wrapper" class="sticky top-0 z-40 w-full max-w-full font-sans">
+<div id="site-header-wrapper" class="sticky top-0 z-50 w-full max-w-full font-sans shadow-xs">
     
     {{-- Announcement Bar (Clean Solid Dark, Responsive Truncate) --}}
     <div class="bg-stone-900 border-b border-stone-800 text-stone-300 text-[11px] sm:text-xs py-2 px-3 sm:px-6 tracking-wider uppercase font-medium">
@@ -55,67 +55,26 @@
                     </a>
                 </div>
 
-                {{-- Desktop Navigation Links (Compact & Perfectly Spaced, No Overflow) --}}
-                <nav class="hidden xl:flex items-center space-x-1 2xl:space-x-1.5 text-[11px] 2xl:text-[12px] font-medium tracking-wider uppercase flex-1 justify-center whitespace-nowrap shrink min-w-0">
+                {{-- Desktop Navigation Links (Only Kategori, New Arrivals, Best Seller, Lacak Pesanan, Custom Order) --}}
+                <nav class="hidden xl:flex items-center space-x-1.5 2xl:space-x-2 text-[11px] 2xl:text-[12px] font-medium tracking-wider uppercase flex-1 justify-center whitespace-nowrap shrink min-w-0">
                     
-                    {{-- Katalog --}}
-                    <a href="{{ url('/') }}" 
-                       class="px-2 py-1.5 2xl:px-2.5 2xl:py-1.5 {{ request()->is('/') ? 'text-white bg-orange-600 font-semibold' : 'text-stone-700 hover:text-orange-600 hover:bg-stone-100' }} rounded transition-colors duration-150">
-                        Katalog
-                    </a>
-
-                    {{-- Dropdown Kategori --}}
-                    <div class="relative group">
-                        <button type="button" 
-                                class="px-2 py-1.5 2xl:px-2.5 2xl:py-1.5 text-stone-700 hover:text-orange-600 hover:bg-stone-100 rounded transition-colors duration-150 flex items-center gap-1 focus:outline-none">
-                            <span>Kategori</span>
-                            <svg class="w-3 h-3 text-stone-400 group-hover:text-orange-600 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                            </svg>
-                        </button>
-                        {{-- Dropdown Menu --}}
-                        <div class="absolute left-0 mt-1 w-52 bg-white border border-stone-200 rounded-lg shadow-xl py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-50">
-                            <a href="#ruang-tamu" class="block px-4 py-2 text-xs text-stone-700 hover:bg-orange-50 hover:text-orange-600 font-medium transition-colors">
-                                🛋️ Ruang Tamu &amp; Sofa
-                            </a>
-                            <a href="#ruang-makan" class="block px-4 py-2 text-xs text-stone-700 hover:bg-orange-50 hover:text-orange-600 font-medium transition-colors">
-                                🍽️ Meja Makan Solid
-                            </a>
-                            <a href="#kamar-tidur" class="block px-4 py-2 text-xs text-stone-700 hover:bg-orange-50 hover:text-orange-600 font-medium transition-colors">
-                                🛏️ Kamar Tidur &amp; Dipan
-                            </a>
-                            <a href="#ruang-kerja" class="block px-4 py-2 text-xs text-stone-700 hover:bg-orange-50 hover:text-orange-600 font-medium transition-colors">
-                                💼 Meja Kerja &amp; Kantor
-                            </a>
-                            <div class="border-t border-stone-100 my-1"></div>
-                            <a href="#custom-order" class="block px-4 py-2 text-xs text-orange-600 hover:bg-orange-50 font-bold transition-colors">
-                                📐 Custom Sesuai Ruangan
-                            </a>
-                        </div>
-                    </div>
 
                     {{-- New Arrivals --}}
-                    <a href="#new-arrivals" 
-                       class="px-2 py-1.5 2xl:px-2.5 2xl:py-1.5 text-stone-700 hover:text-orange-600 hover:bg-stone-100 rounded transition-colors duration-150">
+                    <a href="{{ route('new-arrivals') }}" 
+                       class="px-2.5 py-1.5 {{ request()->routeIs('new-arrivals') ? 'text-orange-600 bg-orange-50 font-bold border border-orange-200' : 'text-stone-700 hover:text-orange-600 hover:bg-stone-100' }} rounded transition-colors duration-150">
                         New Arrivals
                     </a>
                     
                     {{-- Best Seller --}}
-                    <a href="#best-seller" 
-                       class="px-2 py-1.5 2xl:px-2.5 2xl:py-1.5 text-stone-700 hover:text-orange-600 hover:bg-stone-100 rounded transition-colors duration-150 flex items-center gap-1">
+                    <a href="{{ url('/') }}#best-seller" 
+                       class="px-2.5 py-1.5 text-stone-700 hover:text-orange-600 hover:bg-stone-100 rounded transition-colors duration-150 flex items-center gap-1">
                         <span>Best Seller</span>
                         <span class="text-[9px] font-black bg-orange-600 text-white px-1 rounded">HOT</span>
                     </a>
 
-                    {{-- Portofolio --}}
-                    <a href="#portofolio" 
-                       class="px-2 py-1.5 2xl:px-2.5 2xl:py-1.5 text-stone-700 hover:text-orange-600 hover:bg-stone-100 rounded transition-colors duration-150">
-                        Portofolio
-                    </a>
-                    
                     {{-- Lacak Pesanan --}}
-                    <a href="#tracking" 
-                       class="px-2 py-1.5 2xl:px-2.5 2xl:py-1.5 text-stone-700 hover:text-orange-600 hover:bg-stone-100 rounded transition-colors duration-150 flex items-center gap-1">
+                    <a href="{{ url('/') }}#tracking" 
+                       class="px-2.5 py-1.5 text-stone-700 hover:text-orange-600 hover:bg-stone-100 rounded transition-colors duration-150 flex items-center gap-1">
                         <svg class="w-3.5 h-3.5 text-stone-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"/>
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1"/>
@@ -124,15 +83,9 @@
                     </a>
                     
                     {{-- Custom Order --}}
-                    <a href="#custom-order" 
-                       class="px-2 py-1.5 2xl:px-2.5 2xl:py-1.5 text-stone-700 hover:text-orange-600 hover:bg-stone-100 rounded transition-colors duration-150">
+                    <a href="{{ url('/') }}#custom-order" 
+                       class="px-2.5 py-1.5 text-stone-700 hover:text-orange-600 hover:bg-stone-100 rounded transition-colors duration-150">
                         Custom Order
-                    </a>
-                    
-                    {{-- Promo --}}
-                    <a href="#promo" 
-                       class="px-2 py-1.5 2xl:px-2.5 2xl:py-1.5 text-orange-600 font-bold hover:bg-orange-50 rounded transition-colors duration-150">
-                        Promo
                     </a>
                 </nav>
 
@@ -197,26 +150,18 @@
         {{-- Responsive Horizontal Category Strip for Mobile & Tablet (< xl) --}}
         <div class="xl:hidden border-t border-stone-200 bg-stone-50 overflow-x-auto w-full max-w-full py-2 px-3 sm:px-6">
             <div class="flex items-center space-x-1.5 sm:space-x-2 text-[11px] font-medium tracking-wider uppercase whitespace-nowrap min-w-max">
-                <a href="{{ url('/') }}" class="px-2.5 py-1 bg-orange-600 text-white font-bold rounded border border-orange-600 transition-colors">
-                    Semua Katalog
-                </a>
-                <a href="#new-arrivals" class="px-2.5 py-1 bg-white text-stone-800 hover:text-orange-600 hover:bg-stone-100 rounded border border-stone-300 transition-colors">
+                <a href="{{ route('new-arrivals') }}" class="px-2.5 py-1 {{ request()->routeIs('new-arrivals') ? 'bg-orange-600 text-white font-bold border-orange-600' : 'bg-white text-stone-800 hover:text-orange-600 hover:bg-stone-100 border-stone-300' }} rounded border transition-colors">
                     New Arrivals
                 </a>
-                <a href="#best-seller" class="px-2.5 py-1 bg-white text-stone-800 hover:text-orange-600 hover:bg-stone-100 rounded border border-stone-300 transition-colors">
-                    Best Seller
+                <a href="{{ url('/') }}#best-seller" class="px-2.5 py-1 bg-white text-stone-800 hover:text-orange-600 hover:bg-stone-100 rounded border border-stone-300 transition-colors flex items-center gap-1">
+                    <span>Best Seller</span>
+                    <span class="text-[9px] font-black bg-orange-600 text-white px-1 rounded">HOT</span>
                 </a>
-                <a href="#tracking" class="px-2.5 py-1 bg-white text-stone-800 hover:text-orange-600 hover:bg-stone-100 rounded border border-stone-300 transition-colors">
+                <a href="{{ url('/') }}#tracking" class="px-2.5 py-1 bg-white text-stone-800 hover:text-orange-600 hover:bg-stone-100 rounded border border-stone-300 transition-colors">
                     Lacak Pesanan
                 </a>
-                <a href="#portofolio" class="px-2.5 py-1 bg-white text-stone-800 hover:text-orange-600 hover:bg-stone-100 rounded border border-stone-300 transition-colors">
-                    Portofolio
-                </a>
-                <a href="#custom-order" class="px-2.5 py-1 bg-white text-stone-800 hover:text-orange-600 hover:bg-stone-100 rounded border border-stone-300 transition-colors">
+                <a href="{{ url('/') }}#custom-order" class="px-2.5 py-1 bg-white text-stone-800 hover:text-orange-600 hover:bg-stone-100 rounded border border-stone-300 transition-colors">
                     Custom Order
-                </a>
-                <a href="#promo" class="px-2.5 py-1 bg-white text-orange-600 font-bold hover:bg-orange-50 rounded border border-orange-200 transition-colors">
-                    Promo
                 </a>
             </div>
         </div>
@@ -323,48 +268,30 @@
                 <span class="text-[10px] text-white bg-orange-600 font-bold px-2 py-0.5 rounded-full">3 Item</span>
             </a>
             
-            <a href="{{ url('/') }}" 
-               onclick="closeMobileMenu()" 
-               class="flex items-center justify-between px-3 py-2.5 text-white bg-orange-600 font-bold rounded-md transition-colors">
-                <span>Katalog Produk</span>
-                <span class="text-[10px] text-white font-mono bg-orange-700 px-1.5 py-0.5 rounded">ALL</span>
-            </a>
             
-            <a href="#new-arrivals" 
+            <a href="{{ route('new-arrivals') }}" 
                onclick="closeMobileMenu()" 
-               class="block px-3 py-2.5 text-stone-800 hover:text-orange-600 hover:bg-stone-50 rounded-md transition-colors">
+               class="block px-3 py-2.5 {{ request()->routeIs('new-arrivals') ? 'text-orange-600 bg-orange-50 font-bold' : 'text-stone-800 hover:text-orange-600 hover:bg-stone-50' }} rounded-md transition-colors">
                 New Arrivals
             </a>
 
-            <a href="#best-seller" 
+            <a href="{{ url('/') }}#best-seller" 
                onclick="closeMobileMenu()" 
                class="flex items-center justify-between px-3 py-2.5 text-stone-800 hover:text-orange-600 hover:bg-stone-50 rounded-md transition-colors">
                 <span>Best Seller</span>
                 <span class="text-[9px] font-bold px-1.5 py-0.5 bg-orange-600 text-white rounded">HOT</span>
             </a>
 
-            <a href="#portofolio" 
+            <a href="{{ url('/') }}#tracking" 
                onclick="closeMobileMenu()" 
                class="block px-3 py-2.5 text-stone-700 hover:text-orange-600 hover:bg-stone-50 rounded-md transition-colors">
-                Portofolio Proyek
-            </a>
-
-            <a href="#tracking" 
-               onclick="closeMobileMenu()" 
-               class="block px-3 py-2.5 text-stone-700 hover:text-orange-600 hover:bg-stone-50 rounded-md transition-colors">
-                Lacak Pengiriman
+                Lacak Pesanan
             </a>
             
-            <a href="#custom-order" 
+            <a href="{{ url('/') }}#custom-order" 
                onclick="closeMobileMenu()" 
                class="block px-3 py-2.5 text-stone-700 hover:text-orange-600 hover:bg-stone-50 rounded-md transition-colors">
-                Custom Desain
-            </a>
-            
-            <a href="#promo" 
-               onclick="closeMobileMenu()" 
-               class="block px-3 py-2.5 text-orange-600 font-bold hover:bg-orange-50 rounded-md transition-colors">
-                Promo Spesial
+                Custom Order
             </a>
         </nav>
     </div>
@@ -377,7 +304,7 @@
         <div class="mt-3 pt-3 border-t border-stone-200 flex items-center justify-between text-xs text-stone-500">
             <a href="#garansi" class="hover:text-stone-900">Garansi 5 Tahun</a>
             <span>•</span>
-            <a href="#showroom" class="hover:text-stone-900">Jepara &amp; Bali</a>
+            <a href="#showroom" class="hover:text-stone-900">Bali</a>
         </div>
     </div>
 </aside>

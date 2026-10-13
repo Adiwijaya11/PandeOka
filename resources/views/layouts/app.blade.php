@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth overflow-x-hidden">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -18,8 +18,8 @@
     <style>
         /* Strict No Gradient Enforcement & Smooth Rendering */
         html, body {
-            overflow-x: hidden;
-            max-width: 100vw;
+            overflow-x: clip;
+            max-width: 100%;
         }
         body {
             font-family: 'Instrument Sans', sans-serif;
@@ -46,7 +46,25 @@
     </style>
     @stack('styles')
 </head>
-<body class="bg-white text-stone-900 antialiased min-h-screen flex flex-col selection:bg-orange-600 selection:text-white font-sans overflow-x-hidden">
+<body class="bg-white text-stone-900 antialiased min-h-screen flex flex-col selection:bg-orange-600 selection:text-white font-sans">
+
+    {{-- Sleek Top Progress Bar (Luxury Brand Style) --}}
+    <div id="page-loader-progress" class="fixed top-0 left-0 right-0 z-[100] h-[2.5px] bg-transparent pointer-events-none">
+        <div id="page-loader-bar" class="h-full bg-orange-600 w-0 transition-all duration-300 ease-out shadow-[0_0_10px_rgba(234,88,12,0.8)]"></div>
+    </div>
+
+    {{-- Elegant Minimalist Page Transition Backdrop --}}
+    <div id="page-transition-curtain" 
+         class="fixed inset-0 z-[99] bg-white/80 backdrop-blur-[2px] flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-200 ease-out">
+        <div class="flex flex-col items-center select-none transform transition-transform duration-200">
+            <span class="text-xs font-black tracking-[0.3em] text-stone-900 uppercase">
+                PANDE OKA<span class="text-orange-600">.</span>
+            </span>
+            <div class="w-12 h-[2px] bg-stone-200 rounded-full mt-2.5 overflow-hidden">
+                <div class="w-1/2 h-full bg-orange-600 rounded-full animate-progress-slide"></div>
+            </div>
+        </div>
+    </div>
 
     {{-- Main Navbar --}}
     @include('layouts.navbar')
@@ -293,6 +311,101 @@
                 if (container && container.style.display === 'block') {
                     toggleCartDrawer();
                 }
+            }
+        });
+
+        // Elegant Page Transition Navigation Handler
+        const pageLoaderBar = document.getElementById('page-loader-bar');
+        const pageCurtain = document.getElementById('page-transition-curtain');
+        let loaderTimer = null;
+        let progressInterval = null;
+
+        function startPageTransition() {
+            if (!pageLoaderBar || !pageCurtain) return;
+
+            clearTimeout(loaderTimer);
+            clearInterval(progressInterval);
+
+            // Animate top progress bar
+            let progress = 25;
+            pageLoaderBar.style.width = progress + '%';
+            pageLoaderBar.style.transition = 'width 250ms ease-out';
+
+            progressInterval = setInterval(() => {
+                if (progress < 85) {
+                    progress += Math.floor(Math.random() * 12) + 5;
+                    pageLoaderBar.style.width = Math.min(progress, 85) + '%';
+                }
+            }, 120);
+
+            // Show subtle curtain after 60ms (avoids flicker for instant loads)
+            loaderTimer = setTimeout(() => {
+                pageCurtain.classList.remove('opacity-0', 'pointer-events-none');
+                pageCurtain.classList.add('opacity-100', 'pointer-events-auto');
+            }, 60);
+
+            // Fail-safe: automatically dismiss if navigation takes too long or is cancelled
+            setTimeout(() => {
+                endPageTransition();
+            }, 6000);
+        }
+
+        function endPageTransition() {
+            if (!pageLoaderBar || !pageCurtain) return;
+            clearTimeout(loaderTimer);
+            clearInterval(progressInterval);
+
+            // Finish progress bar to 100%
+            pageLoaderBar.style.width = '100%';
+            
+            setTimeout(() => {
+                pageCurtain.classList.remove('opacity-100', 'pointer-events-auto');
+                pageCurtain.classList.add('opacity-0', 'pointer-events-none');
+                
+                setTimeout(() => {
+                    pageLoaderBar.style.transition = 'none';
+                    pageLoaderBar.style.width = '0%';
+                }, 200);
+            }, 150);
+        }
+
+        // Hide transition on initial page show and back-forward cache restore
+        window.addEventListener('pageshow', function(event) {
+            endPageTransition();
+        });
+
+        // Intercept internal link clicks
+        document.addEventListener('click', function(e) {
+            const anchor = e.target.closest('a');
+            if (!anchor) return;
+
+            const href = anchor.getAttribute('href');
+            if (!href) return;
+
+            // Ignore external, target blank, new tab modifier keys, hash anchors, tel/mailto/js
+            if (
+                anchor.target === '_blank' ||
+                e.ctrlKey || e.metaKey || e.shiftKey || e.altKey ||
+                href.startsWith('#') ||
+                href.startsWith('javascript:') ||
+                href.startsWith('mailto:') ||
+                href.startsWith('tel:') ||
+                anchor.hasAttribute('download')
+            ) {
+                return;
+            }
+
+            try {
+                const targetUrl = new URL(anchor.href, window.location.origin);
+                // Same origin and different page
+                if (targetUrl.origin === window.location.origin) {
+                    const isSamePageHash = (targetUrl.pathname === window.location.pathname && targetUrl.search === window.location.search && targetUrl.hash);
+                    if (!isSamePageHash) {
+                        startPageTransition();
+                    }
+                }
+            } catch (err) {
+                // Ignore invalid URLs
             }
         });
     </script>
