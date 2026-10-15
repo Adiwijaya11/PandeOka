@@ -1,67 +1,84 @@
-﻿@extends('layouts.app')
+@extends('layouts.app')
 
 @section('title', 'Best Seller Furniture - Pande Oka Furniture & Living')
 @section('meta_description', 'Katalog furniture kayu jati & sungkai solid terlaris. Desain minimalis modern dengan garansi 5 tahun langsung dari pengrajin Jepara & Bali.')
 
 @section('content')
 
-{{-- Hero Section (Solid Wood Furniture Showcase) --}}
-<section class="bg-stone-50 border-b border-stone-200 py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-7xl mx-auto">
+{{-- Hero Section (Full-Width Background Image, 100svh Total including Navbar, Responsive Typography) --}}
+<section class="relative bg-stone-900 text-white overflow-hidden border-b border-stone-800 flex flex-col justify-center py-6 sm:py-8 lg:py-10 px-4 sm:px-6 lg:px-8"
+         style="min-height: calc(100svh - var(--header-height, 98px));">
+    {{-- Background Image with Solid Dark Overlay (No Gradients) --}}
+    <div class="absolute inset-0 z-0">
+        <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=2000&q=85" 
+             alt="Interior Furniture Kayu Solid Minimalis" 
+             class="w-full h-full object-cover object-center brightness-90">
+        <div class="absolute inset-0 bg-stone-950/75"></div>
+    </div>
+
+    {{-- Hero Content (Vertically Centered across all screens) --}}
+    <div class="relative z-10 max-w-7xl mx-auto w-full flex flex-col justify-center flex-1 my-auto">
         {{-- Breadcrumb --}}
-        <nav class="flex items-center space-x-2 text-xs text-stone-500 uppercase tracking-wider mb-4 sm:mb-6">
-            <a href="{{ url('/') }}" class="hover:text-orange-600 transition-colors">Beranda</a>
+        <nav class="flex items-center space-x-2 text-[11px] sm:text-xs text-stone-300 uppercase tracking-wider mb-3 sm:mb-4">
+            <a href="{{ url('/') }}" class="hover:text-orange-400 transition-colors">Beranda</a>
             <span>/</span>
-            <a href="#katalog" class="hover:text-orange-600 transition-colors">Katalog</a>
+            <a href="#katalog" class="hover:text-orange-400 transition-colors">Katalog</a>
             <span>/</span>
-            <span class="text-orange-600 font-bold">Best Seller</span>
+            <span class="text-orange-400 font-bold">Best Seller</span>
         </nav>
 
-        {{-- Hero Split Grid --}}
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+        <div class="max-w-3xl">
+            <div class="inline-flex items-center gap-2 px-2.5 sm:px-3 py-1 bg-orange-600 text-white text-[10px] sm:text-xs font-black uppercase tracking-wider rounded-md mb-2.5 sm:mb-3.5 shadow-sm">
+                <span class="w-1.5 sm:w-2 h-1.5 sm:h-2 rounded-full bg-white"></span>
+                <span>Koleksi Terlaris &bull; Kayu Solid Asli</span>
+            </div>
             
-            {{-- Left Content --}}
-            <div class="lg:col-span-7">
-                <div class="inline-flex items-center gap-2 px-3 py-1 bg-orange-100 text-orange-700 text-xs font-black uppercase tracking-wider rounded-md mb-3">
-                    <span class="w-1.5 h-1.5 rounded-full bg-orange-600"></span>
-                    <span>Koleksi Terlaris • Kayu Solid Asli</span>
-                </div>
-                <h1 class="text-2xl sm:text-4xl lg:text-5xl font-black text-stone-900 tracking-tight leading-tight">
-                    FURNITURE KAYU SOLID <span class="text-orange-600">BERKUALITAS TINGGI</span>
-                </h1>
-                <p class="text-stone-600 text-sm sm:text-base max-w-2xl mt-3 sm:mt-4 leading-relaxed">
-                    Koleksi furniture kayu jati dan sungkai solid paling banyak diminati. Menghadirkan kehangatan serat kayu alami dengan desain modern minimalis yang tahan puluhan tahun.
-                </p>
+            <h1 class="text-2xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-black text-white tracking-tight leading-[1.12]">
+                FURNITURE KAYU SOLID <span class="text-orange-500">BERKUALITAS TINGGI</span>
+            </h1>
+            
+            <p class="text-xs sm:text-sm md:text-base text-stone-200 max-w-2xl mt-2.5 sm:mt-4 leading-relaxed font-normal">
+                Koleksi furniture kayu jati dan sungkai solid paling banyak diminati. Menghadirkan kehangatan serat kayu alami dengan desain modern minimalis yang tahan puluhan tahun.
+            </p>
 
-                {{-- Action Buttons --}}
-                <div class="mt-6 flex flex-wrap items-center gap-3">
-                    <a href="#katalog" 
-                       class="px-6 py-3 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase tracking-wider rounded-xl transition-colors shadow-sm flex items-center gap-2">
-                        <span>Lihat Semua Katalog</span>
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                        </svg>
-                    </a>
-                    <a href="https://wa.me/6281234567890?text=Halo%20Pande%20Oka,%20saya%20tertarik%20dengan%20koleksi%20furniture%20kayu%20solid" 
-                       target="_blank"
-                       class="px-6 py-3 bg-white hover:bg-stone-100 text-stone-800 border border-stone-300 font-bold text-xs uppercase tracking-wider rounded-xl transition-colors flex items-center gap-2">
-                        <svg class="w-4 h-4 text-orange-600" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2zm.01 1.67c4.54 0 8.24 3.7 8.24 8.24 0 2.2-.86 4.28-2.42 5.84a8.18 8.18 0 0 1-5.83 2.41c-1.47 0-2.91-.39-4.18-1.15l-.3-.18-3.11.82.83-3.03-.2-.31a8.18 8.18 0 0 1-1.27-4.4c0-4.54 3.7-8.24 8.24-8.24zm4.52 11.64c-.25-.13-1.47-.72-1.7-.81-.23-.08-.39-.13-.56.13-.17.25-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.13-1.07-.39-2.03-1.25-.75-.67-1.26-1.5-1.41-1.75-.15-.25-.02-.39.11-.51.11-.11.25-.29.38-.44.13-.15.17-.25.25-.42.08-.17.04-.32-.02-.45-.06-.13-.56-1.35-.77-1.85-.2-.49-.41-.42-.56-.43h-.48c-.17 0-.44.06-.67.31-.23.25-.88.86-.88 2.1 0 1.24.9 2.44 1.03 2.61.13.17 1.78 2.72 4.31 3.81.6.26 1.07.41 1.44.53.61.19 1.16.17 1.6.1.49-.07 1.47-.6 1.68-1.18.21-.58.21-1.08.15-1.18-.06-.11-.23-.17-.48-.29z"/>
-                        </svg>
-                        <span>Konsultasi Kayu</span>
-                    </a>
-                </div>
+            {{-- Action Buttons --}}
+            <div class="mt-5 sm:mt-6 flex flex-wrap items-center gap-2.5 sm:gap-4">
+                <a href="#katalog" 
+                   class="px-5 sm:px-7 py-2.5 sm:py-3 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs sm:text-sm uppercase tracking-wider rounded-xl transition-colors shadow-md flex items-center gap-2 active:scale-95">
+                    <span>Lihat Semua Katalog</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </a>
+                <a href="https://wa.me/6281234567890?text=Halo%20Pande%20Oka,%20saya%20tertarik%20dengan%20koleksi%20furniture%20kayu%20solid" 
+                   target="_blank"
+                   class="px-5 sm:px-7 py-2.5 sm:py-3 bg-white hover:bg-stone-100 text-stone-900 font-bold text-xs sm:text-sm uppercase tracking-wider rounded-xl transition-colors shadow-md flex items-center gap-2 active:scale-95">
+                    <svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2zm.01 1.67c4.54 0 8.24 3.7 8.24 8.24 0 2.2-.86 4.28-2.42 5.84a8.18 8.18 0 0 1-5.83 2.41c-1.47 0-2.91-.39-4.18-1.15l-.3-.18-3.11.82.83-3.03-.2-.31a8.18 8.18 0 0 1-1.27-4.4c0-4.54 3.7-8.24 8.24-8.24zm4.52 11.64c-.25-.13-1.47-.72-1.7-.81-.23-.08-.39-.13-.56.13-.17.25-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.13-1.07-.39-2.03-1.25-.75-.67-1.26-1.5-1.41-1.75-.15-.25-.02-.39.11-.51.11-.11.25-.29.38-.44.13-.15.17-.25.25-.42.08-.17.04-.32-.02-.45-.06-.13-.56-1.35-.77-1.85-.2-.49-.41-.42-.56-.43h-.48c-.17 0-.44.06-.67.31-.23.25-.88.86-.88 2.1 0 1.24.9 2.44 1.03 2.61.13.17 1.78 2.72 4.31 3.81.6.26 1.07.41 1.44.53.61.19 1.16.17 1.6.1.49-.07 1.47-.6 1.68-1.18.21-.58.21-1.08.15-1.18-.06-.11-.23-.17-.48-.29z"/>
+                    </svg>
+                    <span>Konsultasi Kayu</span>
+                </a>
             </div>
 
-            {{-- Right Image Showcase --}}
-            <div class="lg:col-span-5">
-                <div class="relative rounded-2xl overflow-hidden border border-stone-200 shadow-md bg-stone-100 group">
-                    <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1200&q=80" 
-                         alt="Interior Furniture Kayu Solid Minimalis" 
-                         class="w-full h-64 sm:h-80 lg:h-96 object-cover group-hover:scale-105 transition-transform duration-500">
+            {{-- Trust Points Strip (Clean, Solid, No Gradients, No Emojis, Responsive) --}}
+            <div class="mt-6 sm:mt-8 lg:mt-10 pt-4 sm:pt-5 border-t border-white/15 grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4 text-xs">
+                <div>
+                    <div class="text-orange-400 font-bold text-xs sm:text-sm md:text-base">100% Solid</div>
+                    <div class="text-stone-300 text-[10px] sm:text-xs mt-0.5">Jati &amp; Sungkai Legal</div>
+                </div>
+                <div>
+                    <div class="text-orange-400 font-bold text-xs sm:text-sm md:text-base">5 Tahun</div>
+                    <div class="text-stone-300 text-[10px] sm:text-xs mt-0.5">Garansi Konstruksi</div>
+                </div>
+                <div>
+                    <div class="text-orange-400 font-bold text-xs sm:text-sm md:text-base">Gratis Ongkir</div>
+                    <div class="text-stone-300 text-[10px] sm:text-xs mt-0.5">Area Jawa &amp; Bali</div>
+                </div>
+                <div>
+                    <div class="text-orange-400 font-bold text-xs sm:text-sm md:text-base">Custom Order</div>
+                    <div class="text-stone-300 text-[10px] sm:text-xs mt-0.5">Sesuai Dimensi Ruang</div>
                 </div>
             </div>
-
         </div>
     </div>
 </section>

@@ -43,6 +43,16 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #ea580c;
         }
+
+        /* Dynamic header height tokens for 100svh viewport calculations */
+        :root {
+            --header-height: 98px;
+        }
+        @media (min-width: 640px) {
+            :root {
+                --header-height: 116px;
+            }
+        }
     </style>
     @stack('styles')
 </head>
@@ -98,6 +108,18 @@
 
     {{-- Interactive Scripts (Mindtrip Inspired) --}}
     <script>
+        // Dynamic Header Height calculation for 100svh Hero
+        function syncHeaderHeight() {
+            const header = document.getElementById('site-header-wrapper');
+            if (header) {
+                document.documentElement.style.setProperty('--header-height', header.offsetHeight + 'px');
+            }
+        }
+        window.addEventListener('resize', syncHeaderHeight);
+        window.addEventListener('load', syncHeaderHeight);
+        document.addEventListener('DOMContentLoaded', syncHeaderHeight);
+        syncHeaderHeight();
+
         // Toggle Cart Drawer
         function toggleCartDrawer() {
             const container = document.getElementById('cart-drawer-container');
