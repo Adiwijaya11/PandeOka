@@ -44,8 +44,11 @@
                             </span>
                         </div>
 
-                        <div class="absolute top-3 right-3 bg-white/95 backdrop-blur-xs text-stone-800 px-2.5 py-1 rounded-md text-[11px] font-bold border border-stone-200 shadow-xs flex items-center gap-1">
-                            <span>🛡️ Garansi 5 Th</span>
+                        <div class="absolute top-3 right-3 bg-white/95 backdrop-blur-xs text-stone-800 px-2.5 py-1 rounded-md text-[11px] font-bold border border-stone-200 shadow-xs flex items-center gap-1.5">
+                            <svg class="w-3.5 h-3.5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                            </svg>
+                            <span>Garansi 5 Th</span>
                         </div>
                     </div>
 
@@ -62,25 +65,41 @@
                         </div>
                     @endif
 
-                    {{-- Trust Badges Strip Under Gallery --}}
+                    {{-- Trust Badges Strip Under Gallery (Clean SVG Icons, No Emojis) --}}
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-4 border-t border-stone-100 text-center text-xs">
-                        <div class="p-2.5 bg-stone-50 rounded-xl border border-stone-100 flex flex-col items-center justify-center">
-                            <span class="text-base mb-1">🚚</span>
+                        <div class="p-2.5 bg-stone-50 rounded-xl border border-stone-100 flex flex-col items-center justify-center text-center">
+                            <div class="w-7 h-7 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center mb-1.5 shrink-0">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"/>
+                                </svg>
+                            </div>
                             <strong class="text-stone-900 text-[11px] leading-tight">Gratis Ongkir</strong>
                             <span class="text-[10px] text-stone-500">Jawa &amp; Bali</span>
                         </div>
-                        <div class="p-2.5 bg-stone-50 rounded-xl border border-stone-100 flex flex-col items-center justify-center">
-                            <span class="text-base mb-1">🛠️</span>
+                        <div class="p-2.5 bg-stone-50 rounded-xl border border-stone-100 flex flex-col items-center justify-center text-center">
+                            <div class="w-7 h-7 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center mb-1.5 shrink-0">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/>
+                                </svg>
+                            </div>
                             <strong class="text-stone-900 text-[11px] leading-tight">Gratis Rakit</strong>
                             <span class="text-[10px] text-stone-500">Oleh Tim Ahli</span>
                         </div>
-                        <div class="p-2.5 bg-stone-50 rounded-xl border border-stone-100 flex flex-col items-center justify-center">
-                            <span class="text-base mb-1">🌲</span>
+                        <div class="p-2.5 bg-stone-50 rounded-xl border border-stone-100 flex flex-col items-center justify-center text-center">
+                            <div class="w-7 h-7 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center mb-1.5 shrink-0">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                                </svg>
+                            </div>
                             <strong class="text-stone-900 text-[11px] leading-tight">Kayu Legal</strong>
                             <span class="text-[10px] text-stone-500">Sertifikasi SVLK</span>
                         </div>
-                        <div class="p-2.5 bg-stone-50 rounded-xl border border-stone-100 flex flex-col items-center justify-center">
-                            <span class="text-base mb-1">⭐</span>
+                        <div class="p-2.5 bg-stone-50 rounded-xl border border-stone-100 flex flex-col items-center justify-center text-center">
+                            <div class="w-7 h-7 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center mb-1.5 shrink-0">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+                                </svg>
+                            </div>
                             <strong class="text-stone-900 text-[11px] leading-tight">Star+ Seller</strong>
                             <span class="text-[10px] text-stone-500">Official Store</span>
                         </div>
@@ -272,8 +291,10 @@
 
                     {{-- Wood Care Tips --}}
                     <div class="bg-stone-50 rounded-xl p-4 sm:p-5 border border-stone-200 mt-6">
-                        <h4 class="text-xs font-bold text-stone-900 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                            <span>🌿</span>
+                        <h4 class="text-xs font-bold text-stone-900 uppercase tracking-wider mb-2 flex items-center gap-2">
+                            <svg class="w-4 h-4 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
+                            </svg>
                             <span>Panduan Perawatan Kayu Solid Alami:</span>
                         </h4>
                         <p class="text-xs text-stone-600 leading-relaxed">
@@ -358,8 +379,12 @@
 
                 {{-- Safe Delivery Guarantee Card --}}
                 <div class="bg-orange-50/60 rounded-2xl border border-orange-200/80 p-6 shadow-xs text-xs">
-                    <h3 class="font-bold text-stone-900 text-sm mb-2 flex items-center gap-1.5">
-                        <span class="text-orange-600">🛡️</span>
+                    <h3 class="font-bold text-stone-900 text-sm mb-2 flex items-center gap-2">
+                        <span class="w-6 h-6 rounded-md bg-orange-600 text-white flex items-center justify-center shrink-0">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                            </svg>
+                        </span>
                         <span>Garansi 100% Bebas Risiko</span>
                     </h3>
                     <p class="text-stone-600 leading-relaxed mb-3">
