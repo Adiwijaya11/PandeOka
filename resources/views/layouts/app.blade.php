@@ -76,33 +76,169 @@
         </div>
     </div>
 
-    {{-- Main Navbar --}}
-    @include('layouts.navbar')
+    {{-- Main Navbar (Hidden on Auth Pages) --}}
+    @unless(request()->routeIs(['login', 'register']))
+        @include('partials.navbar')
+    @endunless
 
     {{-- Main Content --}}
-    <main class="flex-grow">
+    <main class="flex-grow flex flex-col">
         @yield('content')
     </main>
 
-    {{-- Footer --}}
-    @include('layouts.footer')
+    {{-- Footer (Hidden on Auth Pages) --}}
+    @unless(request()->routeIs(['login', 'register']))
+        @include('partials.footer')
+    @endunless
 
-    {{-- Cart Drawer (Slide-Over) --}}
-    @include('layouts.cart-drawer')
+    {{-- Shopee-Style Variation & Quantity Selection Modal (Bottom Sheet on Mobile, Dialog on Desktop) --}}
+    <div id="shopee-variation-modal" 
+         class="fixed inset-0 z-50 overflow-y-auto hidden" 
+         aria-labelledby="modal-title" 
+         role="dialog" 
+         aria-modal="true">
+        {{-- Backdrop --}}
+        <div id="shopee-modal-backdrop" 
+             onclick="closeShopeeVariationModal()" 
+             class="fixed inset-0 bg-stone-900/60 backdrop-blur-xs transition-opacity duration-300 opacity-0"></div>
 
-    {{-- Toast Notification --}}
+        <div class="min-h-full flex items-end sm:items-center justify-center p-0 sm:p-4 text-center sm:text-left">
+            <div id="shopee-modal-panel" 
+                 class="relative bg-white w-full sm:max-w-md md:max-w-lg rounded-t-2xl sm:rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all duration-300 translate-y-full sm:translate-y-4 opacity-0 sm:scale-95 flex flex-col max-h-[85vh] sm:max-h-[90vh]">
+                
+                {{-- Header / Product Summary (Shopee Style) --}}
+                <div class="p-4 sm:p-5 border-b border-stone-200 flex items-start gap-3.5 bg-stone-50/60 relative">
+                    <div class="w-20 h-20 sm:w-24 sm:h-24 bg-stone-100 rounded-xl overflow-hidden border border-stone-200 shrink-0 shadow-xs">
+                        <img id="modal-product-image" 
+                             src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect width='100' height='100' fill='%23f5f5f4'/%3E%3C/svg%3E" 
+                             alt="Produk" 
+                             class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex-1 min-w-0 pr-7">
+                        <h3 id="modal-product-name" class="text-xs sm:text-sm font-bold text-stone-900 line-clamp-1 mb-1">Produk Furniture</h3>
+                        <div class="flex items-baseline gap-2 flex-wrap">
+                            <span id="modal-product-price" class="text-lg sm:text-2xl font-black text-orange-600 leading-tight">
+                                Rp 0
+                            </span>
+                            <span id="modal-product-original-price" class="text-xs text-stone-400 line-through hidden">
+                            </span>
+                        </div>
+                        <p class="text-xs text-stone-500 mt-1 font-medium">
+                            Stok: <span id="modal-product-stock" class="font-bold text-stone-800">0</span> unit
+                        </p>
+                        <p class="text-xs text-stone-600 mt-1 truncate">
+                            Pilihan: <span id="modal-selected-summary" class="font-bold text-orange-700">-</span>
+                        </p>
+                    </div>
+
+                    {{-- Close Button --}}
+                    <button type="button" 
+                            onclick="closeShopeeVariationModal()" 
+                            class="absolute top-3.5 right-3.5 p-1.5 text-stone-400 hover:text-stone-700 hover:bg-stone-200 rounded-full transition-colors focus:outline-none"
+                            aria-label="Tutup Pilihan">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+
+                {{-- Scrollable Content: Variations, Sizes, Quantity --}}
+                <div class="p-4 sm:p-5 overflow-y-auto space-y-4 sm:space-y-5 flex-1 divide-y divide-stone-100">
+                    
+                    {{-- 1. Pilihan Warna / Finishing --}}
+                    <div class="space-y-2.5">
+                        <h4 class="text-xs font-bold text-stone-900 uppercase tracking-wider flex items-center justify-between">
+                            <span>Warna &amp; Finishing Kayu</span>
+                            <span id="modal-active-finish-label" class="text-orange-600 font-semibold normal-case text-xs"></span>
+                        </h4>
+                        <div class="flex flex-wrap gap-2" id="modal-finish-options">
+                            {{-- Dynamic Finishing Pills --}}
+                        </div>
+                    </div>
+
+                    {{-- 2. Pilihan Ukuran / Dimensi --}}
+                    <div class="pt-4 space-y-2.5">
+                        <h4 class="text-xs font-bold text-stone-900 uppercase tracking-wider flex items-center justify-between">
+                            <span>Ukuran &amp; Dimensi</span>
+                            <span id="modal-active-size-label" class="text-orange-600 font-semibold normal-case text-xs"></span>
+                        </h4>
+                        <div class="flex flex-wrap gap-2" id="modal-size-options">
+                            {{-- Dynamic Size Pills --}}
+                        </div>
+                    </div>
+
+                    {{-- 3. Jumlah / Kuantitas --}}
+                    <div class="pt-4 flex items-center justify-between">
+                        <div>
+                            <h4 class="text-xs font-bold text-stone-900 uppercase tracking-wider">Jumlah</h4>
+                            <p class="text-[11px] text-stone-500 mt-0.5">Sesuai batas ketersediaan stok</p>
+                        </div>
+                        <div class="flex items-center border border-stone-300 rounded-lg overflow-hidden bg-white shadow-xs">
+                            <button type="button" 
+                                    onclick="changeModalQty(-1)" 
+                                    class="w-9 h-9 bg-white hover:bg-stone-100 text-stone-700 font-bold flex items-center justify-center transition-colors">
+                                -
+                            </button>
+                            <input type="number" 
+                                   id="modal-quantity-input" 
+                                   value="1" 
+                                   min="1" 
+                                   max="99" 
+                                   readonly
+                                   class="w-12 h-9 text-center text-xs font-bold text-stone-900 border-x border-stone-300 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+                            <button type="button" 
+                                    onclick="changeModalQty(1)" 
+                                    class="w-9 h-9 bg-white hover:bg-stone-100 text-stone-700 font-bold flex items-center justify-center transition-colors">
+                                +
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+                {{-- Footer Action Button (Shopee Style Big Full Width Orange Button) --}}
+                <div class="p-4 sm:p-5 border-t border-stone-200 bg-white">
+                    <button type="button" 
+                            id="modal-confirm-btn"
+                            onclick="confirmShopeeVariationAdd()" 
+                            class="w-full py-3.5 px-6 bg-orange-600 hover:bg-orange-700 active:scale-[0.99] text-white font-black text-xs sm:text-sm uppercase tracking-wider rounded-xl transition-all shadow-md flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                        </svg>
+                        <span>Masukkan Keranjang</span>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    {{-- Toast Notification (Non-intrusive, No Popups) --}}
     <div id="toast-notification" 
-         class="fixed bottom-6 right-6 z-50 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none">
-        <div class="bg-stone-900 text-white px-5 py-3.5 rounded-xl shadow-2xl flex items-center gap-3 border-l-4 border-orange-600">
-            <div class="w-6 h-6 bg-orange-600 rounded-full flex items-center justify-center flex-shrink-0 text-white">
+         class="fixed bottom-6 right-6 z-50 transform translate-y-28 opacity-0 transition-all duration-300 pointer-events-none max-w-md">
+        <div class="bg-stone-900 text-white pl-4 pr-3 py-3 rounded-xl shadow-2xl flex items-center gap-3 border border-stone-800 border-l-4 border-l-orange-600 pointer-events-auto">
+            <div class="w-8 h-8 bg-orange-600 text-white rounded-lg flex items-center justify-center shrink-0 shadow-xs">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
                 </svg>
             </div>
-            <div>
-                <p id="toast-title" class="text-xs font-bold uppercase tracking-wider text-orange-400">Keranjang Diperbarui</p>
-                <p id="toast-message" class="text-xs text-stone-200 mt-0.5">Produk berhasil ditambahkan ke keranjang belanja.</p>
+            <div class="min-w-0 flex-1">
+                <p id="toast-title" class="text-xs font-black uppercase tracking-wider text-orange-400 leading-tight">Berhasil Ditambahkan</p>
+                <p id="toast-message" class="text-xs text-stone-300 mt-0.5 line-clamp-1">Produk masuk ke keranjang belanja.</p>
             </div>
+            <a href="{{ route('cart.index') }}" 
+               class="shrink-0 px-3 py-1.5 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold uppercase tracking-wider rounded-md transition-colors flex items-center gap-1 shadow-xs">
+                <span>Keranjang</span>
+                <span>&rarr;</span>
+            </a>
+            <button type="button" 
+                    onclick="hideToast()" 
+                    class="p-1 text-stone-400 hover:text-white rounded transition-colors focus:outline-none"
+                    aria-label="Tutup Notifikasi">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
         </div>
     </div>
 
@@ -119,33 +255,6 @@
         window.addEventListener('load', syncHeaderHeight);
         document.addEventListener('DOMContentLoaded', syncHeaderHeight);
         syncHeaderHeight();
-
-        // Toggle Cart Drawer
-        function toggleCartDrawer() {
-            const container = document.getElementById('cart-drawer-container');
-            const backdrop = document.getElementById('cart-backdrop');
-            const panel = document.getElementById('cart-panel');
-
-            if (container.style.display === 'none' || container.style.display === '') {
-                container.style.display = 'block';
-                document.body.classList.add('overflow-hidden');
-                setTimeout(() => {
-                    backdrop.classList.remove('opacity-0');
-                    backdrop.classList.add('opacity-100');
-                    panel.classList.remove('translate-x-full');
-                    panel.classList.add('translate-x-0');
-                }, 10);
-            } else {
-                backdrop.classList.remove('opacity-100');
-                backdrop.classList.add('opacity-0');
-                panel.classList.remove('translate-x-0');
-                panel.classList.add('translate-x-full');
-                document.body.classList.remove('overflow-hidden');
-                setTimeout(() => {
-                    container.style.display = 'none';
-                }, 300);
-            }
-        }
 
         // Mobile Menu Drawer Handlers (Mindtrip Style)
         function openMobileMenu() {
@@ -194,6 +303,21 @@
             }
         }
 
+        // User Profile Dropdown Toggle
+        function toggleUserDropdown() {
+            const dropdown = document.getElementById('user-dropdown-menu');
+            if (!dropdown) return;
+            dropdown.classList.toggle('hidden');
+        }
+
+        document.addEventListener('click', function(event) {
+            const container = document.getElementById('user-menu-container');
+            const dropdown = document.getElementById('user-dropdown-menu');
+            if (container && dropdown && !container.contains(event.target)) {
+                dropdown.classList.add('hidden');
+            }
+        });
+
         // Format Currency IDR
         function formatRupiah(number) {
             return new Intl.NumberFormat('id-ID', {
@@ -203,135 +327,417 @@
             }).format(number);
         }
 
-        // Recalculate Cart Total
-        function recalculateCart() {
-            const rows = document.querySelectorAll('.cart-item-row');
-            let total = 0;
-            let totalCount = 0;
-
-            rows.forEach(row => {
-                const price = parseInt(row.getAttribute('data-price')) || 0;
-                const qty = parseInt(row.querySelector('.item-qty').innerText) || 0;
-                total += price * qty;
-                totalCount += qty;
-            });
-
-            // Update DOM Elements
-            const badge = document.getElementById('nav-cart-badge');
-            const totalText = document.getElementById('nav-cart-total');
-            const drawerCount = document.getElementById('cart-drawer-count');
-            const drawerSubtotal = document.getElementById('drawer-subtotal');
-            const drawerGrandtotal = document.getElementById('drawer-grandtotal');
-
-            if (badge) badge.innerText = totalCount;
-            if (drawerCount) drawerCount.innerText = totalCount;
-            if (totalText) totalText.innerText = formatRupiah(total);
-            if (drawerSubtotal) drawerSubtotal.innerText = formatRupiah(total);
-            if (drawerGrandtotal) drawerGrandtotal.innerText = formatRupiah(total);
+        // Get CSRF Token Helper
+        function getCsrfToken() {
+            return document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
         }
 
-        // Update Item Quantity
-        function updateQty(btn, change) {
-            const row = btn.closest('.cart-item-row');
-            const qtySpan = row.querySelector('.item-qty');
-            let qty = parseInt(qtySpan.innerText) + change;
-            if (qty < 1) {
-                removeCartItem(btn);
+        // Global Cart Badges Updater
+        function updateCartBadges(count) {
+            const numericCount = parseInt(count) || 0;
+            const desktopBadge = document.getElementById('nav-cart-badge');
+            const mobileBadge = document.getElementById('nav-cart-mobile-badge');
+
+            if (desktopBadge) {
+                desktopBadge.innerText = numericCount;
+                if (numericCount > 0) {
+                    desktopBadge.classList.remove('hidden');
+                } else {
+                    desktopBadge.classList.add('hidden');
+                }
+            }
+
+            if (mobileBadge) {
+                mobileBadge.innerText = `${numericCount} Item`;
+                if (numericCount > 0) {
+                    mobileBadge.classList.remove('hidden');
+                } else {
+                    mobileBadge.classList.add('hidden');
+                }
+            }
+
+            const mobileBottomBadge = document.getElementById('mobile-bottom-cart-badge');
+            if (mobileBottomBadge) {
+                mobileBottomBadge.innerText = numericCount;
+                if (numericCount > 0) {
+                    mobileBottomBadge.classList.remove('hidden');
+                } else {
+                    mobileBottomBadge.classList.add('hidden');
+                }
+            }
+        }
+
+        // Add Product To Cart via Real Database CRUD (Notif Only, No Popups)
+        async function addToCart(productId, quantity = 1, variation = null) {
+            try {
+                const response = await fetch('{{ route("cart.add") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': getCsrfToken()
+                    },
+                    body: JSON.stringify({
+                        product_id: parseInt(productId),
+                        quantity: parseInt(quantity) || 1,
+                        variation: variation
+                    })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    updateCartBadges(data.count);
+                    showToast('Berhasil Ditambahkan', data.message || 'Produk telah dimasukkan ke keranjang belanja.');
+                } else {
+                    alert(data.message || 'Gagal menambahkan produk ke keranjang.');
+                }
+            } catch (err) {
+                console.error('Error adding to cart:', err);
+                alert('Terjadi kesalahan saat menambahkan produk ke keranjang.');
+            }
+        }
+
+        // Update Cart Quantity via AJAX (Used on /cart page)
+        async function updateCartQtyAJAX(cartItemId, delta) {
+            const qtyInput = document.getElementById(`item-qty-input-${cartItemId}`);
+            let currentQty = qtyInput ? (parseInt(qtyInput.value) || 1) : 1;
+            let newQty = currentQty + delta;
+
+            if (newQty < 1) {
+                if (confirm('Apakah Anda yakin ingin menghapus produk ini dari keranjang?')) {
+                    await deleteCartItemAJAX(cartItemId);
+                }
                 return;
             }
-            qtySpan.innerText = qty;
 
-            const price = parseInt(row.getAttribute('data-price')) || 0;
-            row.querySelector('.item-total-price').innerText = formatRupiah(price * qty);
+            try {
+                const response = await fetch(`/cart/${cartItemId}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': getCsrfToken()
+                    },
+                    body: JSON.stringify({
+                        quantity: newQty
+                    })
+                });
 
-            recalculateCart();
-        }
+                const data = await response.json();
+                if (data.success) {
+                    updateCartBadges(data.count);
+                    
+                    if (qtyInput) {
+                        qtyInput.value = newQty;
+                    }
 
-        // Remove Item from Cart
-        function removeCartItem(btn) {
-            const row = btn.closest('.cart-item-row');
-            row.remove();
-            recalculateCart();
-            showToast('Item Dihapus', 'Produk telah dikeluarkan dari keranjang.');
-        }
-
-        // Add Product To Cart (Trigger from product cards)
-        function addToCart(title, price, imageSrc) {
-            const container = document.getElementById('cart-items-container');
-            const numericPrice = parseInt(price) || 0;
-
-            // Check if item already in container
-            let existingRow = null;
-            container.querySelectorAll('.cart-item-row').forEach(row => {
-                if (row.querySelector('h4') && row.querySelector('h4').innerText.trim() === title.trim()) {
-                    existingRow = row;
+                    if (typeof recalculateShopeeCart === 'function') {
+                        recalculateShopeeCart();
+                    }
                 }
-            });
-
-            if (existingRow) {
-                const qtySpan = existingRow.querySelector('.item-qty');
-                qtySpan.innerText = parseInt(qtySpan.innerText) + 1;
-                const currentQty = parseInt(qtySpan.innerText);
-                existingRow.querySelector('.item-total-price').innerText = formatRupiah(numericPrice * currentQty);
-            } else {
-                const newRow = document.createElement('div');
-                newRow.className = 'py-4 flex gap-4 cart-item-row';
-                newRow.setAttribute('data-price', numericPrice);
-                newRow.innerHTML = `
-                    <div class="w-20 h-20 bg-stone-100 rounded-lg flex-shrink-0 overflow-hidden border border-stone-200 flex items-center justify-center">
-                        <img src="${imageSrc}" alt="${title}" class="w-full h-full object-cover">
-                    </div>
-                    <div class="flex-1 flex flex-col justify-between">
-                        <div>
-                            <div class="flex justify-between items-start">
-                                <h4 class="text-xs font-bold text-stone-900 leading-snug">${title}</h4>
-                                <button type="button" onclick="removeCartItem(this)" class="text-stone-400 hover:text-red-600 transition-colors ml-2">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                                    </svg>
-                                </button>
-                            </div>
-                            <span class="text-[11px] text-stone-500">Finishing: Kayu Solid Original</span>
-                        </div>
-                        <div class="flex items-center justify-between mt-2">
-                            <div class="flex items-center border border-stone-200 rounded-md">
-                                <button type="button" onclick="updateQty(this, -1)" class="px-2.5 py-0.5 text-stone-600 hover:bg-stone-100 text-xs font-bold">-</button>
-                                <span class="px-3 py-0.5 text-xs font-bold text-stone-900 item-qty">1</span>
-                                <button type="button" onclick="updateQty(this, 1)" class="px-2.5 py-0.5 text-stone-600 hover:bg-stone-100 text-xs font-bold">+</button>
-                            </div>
-                            <span class="text-xs font-bold text-orange-600 item-total-price">${formatRupiah(numericPrice)}</span>
-                        </div>
-                    </div>
-                `;
-                container.prepend(newRow);
+            } catch (err) {
+                console.error('Error updating cart quantity:', err);
             }
-
-            recalculateCart();
-            showToast('Berhasil Ditambahkan', `${title} telah dimasukkan ke keranjang.`);
-            toggleCartDrawer();
         }
 
-        // Show Toast Notification
+        // Delete Cart Item via AJAX (Used on /cart page)
+        async function deleteCartItemAJAX(cartItemId) {
+            try {
+                const response = await fetch(`/cart/${cartItemId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': getCsrfToken()
+                    }
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    updateCartBadges(data.count);
+                    showToast('Item Dihapus', data.message || 'Produk telah dikeluarkan dari keranjang belanja.');
+
+                    const cartRow = document.getElementById(`cart-row-${cartItemId}`);
+                    if (cartRow) {
+                        cartRow.remove();
+                    }
+
+                    if (typeof recalculateShopeeCart === 'function') {
+                        recalculateShopeeCart();
+                    }
+                }
+            } catch (err) {
+                console.error('Error deleting cart item:', err);
+            }
+        }
+
+        // Show Toast Notification (Non-intrusive)
+        let toastTimeout = null;
         function showToast(title, message) {
             const toast = document.getElementById('toast-notification');
+            if (!toast) return;
+
             document.getElementById('toast-title').innerText = title;
             document.getElementById('toast-message').innerText = message;
 
-            toast.classList.remove('translate-y-24', 'opacity-0');
+            clearTimeout(toastTimeout);
+            toast.classList.remove('translate-y-28', 'opacity-0');
             toast.classList.add('translate-y-0', 'opacity-100');
 
-            setTimeout(() => {
-                toast.classList.remove('translate-y-0', 'opacity-100');
-                toast.classList.add('translate-y-24', 'opacity-0');
-            }, 3000);
+            toastTimeout = setTimeout(() => {
+                hideToast();
+            }, 3500);
         }
 
-        // Close on ESC
+        function hideToast() {
+            const toast = document.getElementById('toast-notification');
+            if (!toast) return;
+            toast.classList.remove('translate-y-0', 'opacity-100');
+            toast.classList.add('translate-y-28', 'opacity-0');
+        }
+
+        // ==========================================
+        // Shopee-Style Variation & Size Modal Logic
+        // ==========================================
+        let currentModalProduct = null;
+        let selectedModalFinish = '';
+        let selectedModalSize = '';
+        let currentModalQty = 1;
+
+        // Trigger Quick Add from button data attributes or object
+        async function triggerShopeeQuickAdd(btnOrData) {
+            if (btnOrData instanceof HTMLElement) {
+                const ds = btnOrData.dataset;
+                openShopeeVariationModal({
+                    id: parseInt(ds.id),
+                    name: ds.name || 'Produk Furniture Solid',
+                    price: parseInt(ds.price) || 0,
+                    formatted_price: ds.formattedPrice || formatRupiah(parseInt(ds.price) || 0),
+                    original_price: ds.originalPrice ? parseInt(ds.originalPrice) : null,
+                    formatted_original_price: ds.formattedOriginalPrice || '',
+                    image: ds.image || '',
+                    stock: parseInt(ds.stock) || 10,
+                    finish: ds.finish || 'Natural Satin Doff',
+                    dimensions: ds.dimensions || 'Standard (P x L x T)'
+                });
+            } else if (typeof btnOrData === 'object' && btnOrData !== null) {
+                openShopeeVariationModal(btnOrData);
+            } else if (typeof btnOrData === 'number' || typeof btnOrData === 'string') {
+                try {
+                    const res = await fetch(`/products/${btnOrData}/quick-view`);
+                    const data = await res.json();
+                    openShopeeVariationModal(data);
+                } catch (e) {
+                    console.error('Error fetching quick-view product:', e);
+                }
+            }
+        }
+
+        // Open Modal and populate options
+        function openShopeeVariationModal(product) {
+            currentModalProduct = product;
+            currentModalQty = 1;
+
+            // Product summary header
+            const nameElem = document.getElementById('modal-product-name');
+            if (nameElem) {
+                nameElem.innerText = product.name || 'Produk Furniture Solid';
+            }
+
+            const imgElem = document.getElementById('modal-product-image');
+            if (imgElem) {
+                imgElem.src = product.image || '';
+                imgElem.alt = product.name || 'Produk';
+            }
+
+            const priceElem = document.getElementById('modal-product-price');
+            if (priceElem) {
+                priceElem.innerText = product.formatted_price || formatRupiah(product.price);
+            }
+
+            const origPriceElem = document.getElementById('modal-product-original-price');
+            if (origPriceElem) {
+                if (product.original_price && product.original_price > product.price) {
+                    origPriceElem.innerText = product.formatted_original_price || formatRupiah(product.original_price);
+                    origPriceElem.classList.remove('hidden');
+                } else {
+                    origPriceElem.classList.add('hidden');
+                }
+            }
+
+            const stock = parseInt(product.stock) || 10;
+            const stockElem = document.getElementById('modal-product-stock');
+            if (stockElem) stockElem.innerText = stock;
+
+            const qtyInput = document.getElementById('modal-quantity-input');
+            if (qtyInput) {
+                qtyInput.max = stock;
+                qtyInput.value = 1;
+            }
+
+            // 1. Build Finishing Choices
+            const defaultFinishes = [
+                product.finish || 'Natural Satin Doff',
+                'Salak Brown Doff',
+                'Bleached Light Teak',
+                'Walnut Finish Doff'
+            ];
+            const uniqueFinishes = [...new Set(defaultFinishes)].filter(Boolean);
+            selectedModalFinish = uniqueFinishes[0];
+
+            const finishContainer = document.getElementById('modal-finish-options');
+            if (finishContainer) {
+                finishContainer.innerHTML = '';
+                uniqueFinishes.forEach(finish => {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = `variation-pill px-3 py-2 rounded-lg text-xs font-bold transition-all border ${
+                        finish === selectedModalFinish 
+                            ? 'border-orange-600 bg-orange-50 text-orange-700 shadow-xs ring-1 ring-orange-600' 
+                            : 'border-stone-300 hover:border-stone-400 bg-white text-stone-700'
+                    }`;
+                    btn.innerText = finish;
+                    btn.onclick = () => selectModalFinish(finish, btn);
+                    finishContainer.appendChild(btn);
+                });
+            }
+
+            // 2. Build Size / Dimension Choices
+            const baseDim = product.dimensions && product.dimensions.trim() !== '' 
+                ? product.dimensions 
+                : 'Standard 200 x 85 cm';
+            const sizeOptions = [
+                baseDim,
+                'Compact (-15% Ruang)',
+                'Large (+20% Custom)'
+            ];
+            selectedModalSize = sizeOptions[0];
+
+            const sizeContainer = document.getElementById('modal-size-options');
+            if (sizeContainer) {
+                sizeContainer.innerHTML = '';
+                sizeOptions.forEach(size => {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = `size-pill px-3 py-2 rounded-lg text-xs font-bold transition-all border ${
+                        size === selectedModalSize 
+                            ? 'border-orange-600 bg-orange-50 text-orange-700 shadow-xs ring-1 ring-orange-600' 
+                            : 'border-stone-300 hover:border-stone-400 bg-white text-stone-700'
+                    }`;
+                    btn.innerText = size;
+                    btn.onclick = () => selectModalSize(size, btn);
+                    sizeContainer.appendChild(btn);
+                });
+            }
+
+            updateModalSummary();
+
+            // Animate In Modal
+            const modal = document.getElementById('shopee-variation-modal');
+            const backdrop = document.getElementById('shopee-modal-backdrop');
+            const panel = document.getElementById('shopee-modal-panel');
+
+            if (!modal || !backdrop || !panel) return;
+
+            modal.classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+
+            setTimeout(() => {
+                backdrop.classList.remove('opacity-0');
+                backdrop.classList.add('opacity-100');
+                panel.classList.remove('translate-y-full', 'sm:translate-y-4', 'opacity-0', 'sm:scale-95');
+                panel.classList.add('translate-y-0', 'opacity-100', 'sm:scale-100');
+            }, 10);
+        }
+
+        // Close Modal
+        function closeShopeeVariationModal() {
+            const modal = document.getElementById('shopee-variation-modal');
+            const backdrop = document.getElementById('shopee-modal-backdrop');
+            const panel = document.getElementById('shopee-modal-panel');
+
+            if (!modal || modal.classList.contains('hidden')) return;
+
+            backdrop.classList.remove('opacity-100');
+            backdrop.classList.add('opacity-0');
+            panel.classList.remove('translate-y-0', 'opacity-100', 'sm:scale-100');
+            panel.classList.add('translate-y-full', 'sm:translate-y-4', 'opacity-0', 'sm:scale-95');
+
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.body.classList.remove('overflow-hidden');
+            }, 260);
+        }
+
+        // Select Finishing
+        function selectModalFinish(finish, btn) {
+            selectedModalFinish = finish;
+            document.querySelectorAll('#modal-finish-options button').forEach(b => {
+                b.className = 'variation-pill px-3 py-2 rounded-lg text-xs font-bold transition-all border border-stone-300 hover:border-stone-400 bg-white text-stone-700';
+            });
+            btn.className = 'variation-pill px-3 py-2 rounded-lg text-xs font-bold transition-all border border-orange-600 bg-orange-50 text-orange-700 shadow-xs ring-1 ring-orange-600';
+            updateModalSummary();
+        }
+
+        // Select Size
+        function selectModalSize(size, btn) {
+            selectedModalSize = size;
+            document.querySelectorAll('#modal-size-options button').forEach(b => {
+                b.className = 'size-pill px-3 py-2 rounded-lg text-xs font-bold transition-all border border-stone-300 hover:border-stone-400 bg-white text-stone-700';
+            });
+            btn.className = 'size-pill px-3 py-2 rounded-lg text-xs font-bold transition-all border border-orange-600 bg-orange-50 text-orange-700 shadow-xs ring-1 ring-orange-600';
+            updateModalSummary();
+        }
+
+        // Change Quantity in Modal
+        function changeModalQty(delta) {
+            const input = document.getElementById('modal-quantity-input');
+            if (!input) return;
+            let qty = parseInt(input.value) || 1;
+            const max = parseInt(input.max) || 99;
+            qty += delta;
+            if (qty < 1) qty = 1;
+            if (qty > max) qty = max;
+            input.value = qty;
+            currentModalQty = qty;
+        }
+
+        // Update Modal Summary Text
+        function updateModalSummary() {
+            const summaryElem = document.getElementById('modal-selected-summary');
+            const finishLabel = document.getElementById('modal-active-finish-label');
+            const sizeLabel = document.getElementById('modal-active-size-label');
+
+            if (summaryElem) {
+                summaryElem.innerText = `${selectedModalFinish}, ${selectedModalSize}`;
+            }
+            if (finishLabel) {
+                finishLabel.innerText = selectedModalFinish;
+            }
+            if (sizeLabel) {
+                sizeLabel.innerText = selectedModalSize;
+            }
+        }
+
+        // Confirm Add To Cart with selected Variation & Quantity
+        async function confirmShopeeVariationAdd() {
+            if (!currentModalProduct) return;
+
+            const variation = `${selectedModalFinish} • ${selectedModalSize}`;
+            const qty = currentModalQty;
+            const productId = currentModalProduct.id;
+
+            closeShopeeVariationModal();
+
+            await addToCart(productId, qty, variation);
+        }
+
+        // Close on ESC Key
         document.addEventListener('keydown', function(event) {
             if (event.key === 'Escape') {
-                const container = document.getElementById('cart-drawer-container');
-                if (container && container.style.display === 'block') {
-                    toggleCartDrawer();
+                const modal = document.getElementById('shopee-variation-modal');
+                if (modal && !modal.classList.contains('hidden')) {
+                    closeShopeeVariationModal();
                 }
             }
         });
