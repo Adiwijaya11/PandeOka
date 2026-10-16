@@ -195,7 +195,17 @@
                                 </a>
                                 
                                 <button type="button" 
-                                        onclick="addToCart('{{ addslashes($product['name']) }}', {{ $product['price'] }}, '{{ $product['image'] }}')"
+                                        data-id="{{ $product['id'] }}"
+                                        data-name="{{ $product['name'] }}"
+                                        data-price="{{ $product['price'] }}"
+                                        data-formatted-price="{{ 'Rp ' . number_format($product['price'], 0, ',', '.') }}"
+                                        data-original-price="{{ $product['original_price'] ?? '' }}"
+                                        data-formatted-original-price="{{ isset($product['original_price']) && $product['original_price'] ? 'Rp ' . number_format($product['original_price'], 0, ',', '.') : '' }}"
+                                        data-image="{{ $product['image'] }}"
+                                        data-stock="{{ $product['stock'] ?? 10 }}"
+                                        data-finish="{{ $product['finish'] ?? 'Natural Satin Doff' }}"
+                                        data-dimensions="{{ $product['dimensions'] ?? 'Standard' }}"
+                                        onclick="triggerShopeeQuickAdd(this)"
                                         class="py-1.5 sm:py-2 px-2 bg-stone-900 hover:bg-orange-600 text-white rounded font-bold text-[10px] sm:text-xs uppercase tracking-wider transition-colors flex items-center justify-center gap-1 active:scale-[0.98]">
                                     <svg class="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>

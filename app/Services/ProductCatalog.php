@@ -2,14 +2,18 @@
 
 namespace App\Services;
 
+use App\Models\Product;
+use Database\Seeders\ProductSeeder;
+use Illuminate\Database\Eloquent\Collection;
+
 class ProductCatalog
 {
     /**
-     * Get all products in the catalog.
+     * Seed dataset of authentic solid wood furniture products.
      *
      * @return array<int, array<string, mixed>>
      */
-    public static function all(): array
+    public static function rawProducts(): array
     {
         return [
             [
@@ -102,7 +106,7 @@ class ProductCatalog
                 'gallery' => [
                     'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=900&q=80',
                     'https://images.unsplash.com/photo-1503602642458-232111445657?auto=format&fit=crop&w=900&q=80',
-                    'https://images.unsplash.com/photo-1580481077197-393bfbb673e1?auto=format&fit=crop&w=900&q=80',
+                    'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?auto=format&fit=crop&w=900&q=80',
                 ],
                 'description' => 'Ikon desain kursi Wishbone (Y-Chair) Skandinavia yang dihadirkan kembali dengan material kayu sungkai solid lokal berpendar cerah alami. Dudukan dirajut secara manual menggunakan tali kertas kraft (paper cord) elastis yang menyesuaikan kontur duduk dengan daya tahan puluhan tahun.',
                 'features' => [
@@ -756,50 +760,56 @@ class ProductCatalog
     }
 
     /**
-     * Find a product by its slug.
+     * Get all products from the database (fallback to seed if empty).
      *
-     * @return array<string, mixed>|null
+     * @return Collection<int, Product>
      */
-    public static function findBySlug(string $slug): ?array
+    public static function all()
     {
-        foreach (self::all() as $product) {
-            if ($product['slug'] === $slug) {
-                return $product;
-            }
+        $products = Product::query()->orderBy('id')->get();
+
+        if ($products->isEmpty()) {
+            (new ProductSeeder)->run();
+            $products = Product::query()->orderBy('id')->get();
         }
 
-        return null;
+        return $products;
     }
 
     /**
-     * Get related products based on category.
-     *
-     * @return array<int, array<string, mixed>>
+     * Find a product by its slug from database.
      */
-    public static function getRelated(string $categorySlug, string $excludeSlug, int $limit = 4): array
+    public static function findBySlug(string $slug): ?Product
     {
-        $all = self::all();
-        $related = [];
+        $product = Product::where('slug', $slug)->first();
 
-        foreach ($all as $product) {
-            if ($product['slug'] !== $excludeSlug && $product['category_slug'] === $categorySlug) {
-                $related[] = $product;
-                if (count($related) >= $limit) {
-                    return $related;
-                }
-            }
+        if (! $product && Product::count() === 0) {
+            (new ProductSeeder)->run();
+            $product = Product::where('slug', $slug)->first();
         }
 
-        // If not enough in same category, supplement from other products
-        if (count($related) < $limit) {
-            foreach ($all as $product) {
-                if ($product['slug'] !== $excludeSlug && ! in_array($product, $related, true)) {
-                    $related[] = $product;
-                    if (count($related) >= $limit) {
-                        break;
-                    }
-                }
-            }
+        return $product;
+    }
+
+    /**
+     * Get related products based on category from database.
+     *
+     * @return Collection<int, Product>
+     */
+    public static function getRelated(string $categorySlug, string $excludeSlug, int $limit = 4)
+    {
+        $related = Product::where('category_slug', $categorySlug)
+            ->where('slug', '!=', $excludeSlug)
+            ->take($limit)
+            ->get();
+
+        if ($related->count() < $limit) {
+            $needed = $limit - $related->count();
+            $additional = Product::where('slug', '!=', $excludeSlug)
+                ->whereNotIn('id', $related->pluck('id'))
+                ->take($needed)
+                ->get();
+            $related = $related->merge($additional);
         }
 
         return $related;

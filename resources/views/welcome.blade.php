@@ -137,7 +137,11 @@
         {{-- Product Grid (Shopee Style: 2 Kolom Mobile, 3 Kolom Tablet, 4 Kolom Desktop) --}}
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-4 lg:gap-6 pt-6 sm:pt-8">
 
-            @foreach(array_slice($products ?? \App\Services\ProductCatalog::all(), 0, 8) as $product)
+            @php
+                $displayProducts = $products ?? \App\Services\ProductCatalog::all();
+                $displayProducts = $displayProducts instanceof \Illuminate\Support\Collection ? $displayProducts->take(8) : array_slice($displayProducts, 0, 8);
+            @endphp
+            @foreach($displayProducts as $product)
                 <div class="group bg-white border border-stone-200 hover:border-orange-500 rounded-lg sm:rounded-xl overflow-hidden transition-all duration-200 flex flex-col justify-between shadow-2xs hover:shadow-md">
                     
                     {{-- Clickable Image to Product Detail --}}
@@ -199,7 +203,17 @@
                                 </a>
 
                                 <button type="button" 
-                                        onclick="addToCart('{{ addslashes($product['name']) }}', {{ $product['price'] }}, '{{ $product['image'] }}')"
+                                        data-id="{{ $product['id'] }}"
+                                        data-name="{{ $product['name'] }}"
+                                        data-price="{{ $product['price'] }}"
+                                        data-formatted-price="{{ 'Rp ' . number_format($product['price'], 0, ',', '.') }}"
+                                        data-original-price="{{ $product['original_price'] ?? '' }}"
+                                        data-formatted-original-price="{{ isset($product['original_price']) && $product['original_price'] ? 'Rp ' . number_format($product['original_price'], 0, ',', '.') : '' }}"
+                                        data-image="{{ $product['image'] }}"
+                                        data-stock="{{ $product['stock'] ?? 10 }}"
+                                        data-finish="{{ $product['finish'] ?? 'Natural Satin Doff' }}"
+                                        data-dimensions="{{ $product['dimensions'] ?? 'Standard' }}"
+                                        onclick="triggerShopeeQuickAdd(this)"
                                         class="py-1.5 sm:py-2.5 px-2 bg-stone-900 hover:bg-orange-600 text-white rounded-md sm:rounded-lg font-bold text-[10px] sm:text-xs uppercase tracking-wider transition-colors flex items-center justify-center gap-1 active:scale-[0.98]">
                                     <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
