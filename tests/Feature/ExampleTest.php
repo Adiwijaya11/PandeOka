@@ -468,4 +468,108 @@ class ExampleTest extends TestCase
             'quantity' => 2,
         ]);
     }
+
+    public function test_cart_checkout_downloads_excel_order_output_and_clears_cart(): void
+    {
+        $user = User::factory()->create([
+            'name' => 'Made Sudarma',
+            'email' => 'madesudarma@example.com',
+            'phone' => '+6281234567899',
+        ]);
+
+        $product = Product::factory()->create([
+            'name' => 'Meja Makan Trembesi Solid Custom',
+            'price' => 5000000,
+        ]);
+
+        $this->actingAs($user)->postJson('/cart/add', [
+            'product_id' => $product->id,
+            'quantity' => 1,
+            'variation' => 'Natural Teak Wood • Ukuran: 180x90x78 cm (P x L x T)',
+        ]);
+
+        $response = $this->actingAs($user)->post('/cart/checkout/excel');
+
+        $response->assertStatus(200);
+        $response->assertHeader('Content-Type', 'application/vnd.ms-excel; charset=utf-8');
+        $this->assertStringContainsString('SPK_Pesanan_PandeOka_', $response->headers->get('Content-Disposition'));
+        $this->assertStringContainsString('PANDE OKA FURNITURE &amp; LIVING BALI', $response->getContent());
+        $this->assertStringContainsString('180x90x78 cm', $response->getContent());
+        $this->assertStringContainsString('TANPA PENGIRIMAN EKSPEDISI', $response->getContent());
+
+        // Assert items in cart were cleared after purchase
+        $this->assertDatabaseMissing('cart_items', [
+            'user_id' => $user->id,
+            'product_id' => $product->id,
+        ]);
+    }
+
+    public function test_product_detail_page_has_custom_dimension_inputs_and_no_gratis_ongkir(): void
+    {
+        $product = Product::factory()->create([
+            'slug' => 'kursi-makan-jati-custom-test',
+            'name' => 'Kursi Makan Jati Custom Test',
+            'dimensions' => '50 x 45 x 85 cm',
+        ]);
+
+        $response = $this->get('/products/'.$product->slug);
+
+        $response->assertStatus(200);
+        $response->assertSee('id="custom-length"', false);
+        $response->assertSee('id="custom-width"', false);
+        $response->assertSee('id="custom-height"', false);
+        $response->assertSee('Custom Ukuran Langsung (P x L x T)');
+        $response->assertDontSee('Gratis Ongkir');
+    }
+
+    public function test_cards_do_not_contain_gratis_ongkir_badge(): void
+    {
+        $response = $this->get('/');
+
+        $response->assertStatus(200);
+        $response->assertDontSee('Gratis Ongkir');
+    }
+
+    public function test_beli_sekarang_page_renders_with_direct_product_and_custom_variation(): void
+    {
+        $product = Product::factory()->create([
+            'name' => 'Meja Kerja Solid Jati Bali',
+            'price' => 3500000,
+        ]);
+
+        $response = $this->get('/beli-sekarang?product_id='.$product->id.'&quantity=2&variation='.urlencode('Natural Teak Wood • Ukuran: 150x70x75 cm (P x L x T)'));
+
+        $response->assertStatus(200);
+        $response->assertSee('Meja Kerja Solid Jati Bali');
+        $response->assertSee('150x70x75 cm');
+        $response->assertSee('Beli Sekarang');
+        $response->assertSee('Workshop &amp; Showroom Pande Oka', false);
+        $response->assertSee('Konfirmasi &amp; Unduh SPK Excel', false);
+    }
+
+    public function test_beli_sekarang_process_validates_and_downloads_spk_excel(): void
+    {
+        $product = Product::factory()->create([
+            'name' => 'Kursi Santai Sungkai Solid',
+            'price' => 1800000,
+        ]);
+
+        $response = $this->post('/beli-sekarang/proses', [
+            'customer_name' => 'Kadek Artawan',
+            'customer_phone' => '081999888777',
+            'customer_email' => 'kadek@pandeoka.id',
+            'product_id' => $product->id,
+            'quantity' => 1,
+            'variation' => 'Salak Brown • Ukuran: 60x60x78 cm (P x L x T)',
+            'payment_method' => 'Bayar di Workshop (Cash/EDC/Transfer)',
+            'voucher_code' => 'PANDEOKA2026',
+        ]);
+
+        $response->assertStatus(200);
+        $response->assertHeader('Content-Type', 'application/vnd.ms-excel; charset=utf-8');
+        $this->assertStringContainsString('SPK_Pesanan_PandeOka_', $response->headers->get('Content-Disposition'));
+        $this->assertStringContainsString('Kadek Artawan', $response->getContent());
+        $this->assertStringContainsString('Kursi Santai Sungkai Solid', $response->getContent());
+        $this->assertStringContainsString('60x60x78 cm', $response->getContent());
+    }
 }

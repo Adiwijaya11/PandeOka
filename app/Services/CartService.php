@@ -65,9 +65,16 @@ class CartService
         $guestItems = CartItem::whereNull('user_id')->where('session_id', $sessionId)->get();
 
         foreach ($guestItems as $guestItem) {
-            $userItem = CartItem::where('user_id', $userId)
-                ->where('product_id', $guestItem->product_id)
-                ->first();
+            $userQuery = CartItem::where('user_id', $userId)
+                ->where('product_id', $guestItem->product_id);
+
+            if ($guestItem->variation !== null && $guestItem->variation !== '') {
+                $userQuery->where('variation', $guestItem->variation);
+            } else {
+                $userQuery->whereNull('variation');
+            }
+
+            $userItem = $userQuery->first();
 
             if ($userItem) {
                 $userItem->quantity += $guestItem->quantity;
@@ -109,6 +116,12 @@ class CartService
         $sessionId = self::getSessionId();
 
         $query = CartItem::where('product_id', $productId);
+        if ($variation !== null && $variation !== '') {
+            $query->where('variation', $variation);
+        } else {
+            $query->whereNull('variation');
+        }
+
         if ($userId) {
             $query->where('user_id', $userId);
         } else {
@@ -123,9 +136,6 @@ class CartService
                 $newQty = $product->stock;
             }
             $item->quantity = $newQty;
-            if ($variation) {
-                $item->variation = $variation;
-            }
             $item->save();
         } else {
             $item = CartItem::create([

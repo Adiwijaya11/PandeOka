@@ -1,7 +1,18 @@
 @extends('layouts.app')
 
 @section('title', $product['name'] . ' - Pande Oka Furniture & Living')
-@section('meta_description', 'Beli ' . $product['name'] . ' dari bahan ' . $product['wood_type'] . '. Garansi 5 tahun, gratis ongkir dan rakit area Jawa - Bali.')
+@section('meta_description', 'Beli ' . $product['name'] . ' dari bahan ' . $product['wood_type'] . '. Garansi 5 tahun, custom ukuran langsung P x L x T & output SPK Excel workshop.')
+
+@php
+    $defaultLength = 120;
+    $defaultWidth = 60;
+    $defaultHeight = 75;
+    if (!empty($product['dimensions']) && preg_match('/(\d+)\s*[xX*×]\s*(\d+)\s*[xX*×]\s*(\d+)/', $product['dimensions'], $dimMatches)) {
+        $defaultLength = (int)$dimMatches[1];
+        $defaultWidth = (int)$dimMatches[2];
+        $defaultHeight = (int)$dimMatches[3];
+    }
+@endphp
 
 @section('content')
 
@@ -70,12 +81,12 @@
                         <div class="p-2 sm:p-2.5 bg-stone-50 rounded-lg sm:rounded-xl border border-stone-100 flex items-center sm:flex-col gap-2 sm:gap-1.5 justify-start sm:justify-center text-left sm:text-center">
                             <div class="w-7 h-7 rounded-md sm:rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center shrink-0">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                                 </svg>
                             </div>
                             <div class="min-w-0">
-                                <strong class="text-stone-900 text-[10px] sm:text-[11px] leading-tight block truncate">Gratis Ongkir</strong>
-                                <span class="text-[9px] sm:text-[10px] text-stone-500 block truncate">Jawa &amp; Bali</span>
+                                <strong class="text-stone-900 text-[10px] sm:text-[11px] leading-tight block truncate">Output Excel</strong>
+                                <span class="text-[9px] sm:text-[10px] text-stone-500 block truncate">SPK Workshop</span>
                             </div>
                         </div>
                         <div class="p-2 sm:p-2.5 bg-stone-50 rounded-lg sm:rounded-xl border border-stone-100 flex items-center sm:flex-col gap-2 sm:gap-1.5 justify-start sm:justify-center text-left sm:text-center">
@@ -163,7 +174,7 @@
                                 </span>
                             </div>
                             <p class="text-[11px] sm:text-xs text-stone-500 mt-1.5 sm:mt-2">
-                                Termasuk PPN 11% &bull; Subsidi ongkir otomatis aktif saat checkout.
+                                Termasuk PPN 11% &bull; Tanpa pengiriman ekspedisi, pesanan langsung diterbitkan ke SPK Excel workshop.
                             </p>
                         </div>
 
@@ -179,7 +190,9 @@
                             </div>
                             <div class="grid grid-cols-3 gap-2 py-1 border-b border-stone-100">
                                 <span class="text-stone-500 font-semibold">Dimensi</span>
-                                <span class="col-span-2 text-stone-900 font-medium">{{ $product['dimensions'] }}</span>
+                                <span id="spec-dimension-preview" class="col-span-2 text-stone-900 font-bold text-orange-700">
+                                    {{ $defaultLength }} x {{ $defaultWidth }} x {{ $defaultHeight }} cm
+                                </span>
                             </div>
                             <div class="grid grid-cols-3 gap-2 py-1">
                                 <span class="text-stone-500 font-semibold">Garansi</span>
@@ -213,6 +226,78 @@
                                         class="variant-btn px-3 py-2 rounded-lg border border-stone-300 hover:border-stone-400 bg-white text-stone-700 font-semibold active:scale-95 transition-all min-h-[38px] flex items-center">
                                     Bleached Light Teak
                                 </button>
+                            </div>
+                        </div>
+
+                        {{-- Custom Dimension Inputs (Panjang x Lebar x Tinggi) Langsung dari User --}}
+                        <div class="mt-4 sm:mt-5 p-3.5 sm:p-4 bg-orange-50/60 rounded-xl border border-orange-200">
+                            <div class="flex items-center justify-between mb-2">
+                                <label class="text-xs font-bold text-stone-900 uppercase tracking-wider flex items-center gap-1.5">
+                                    <svg class="w-4 h-4 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/>
+                                    </svg>
+                                    <span>Custom Ukuran Langsung (P x L x T):</span>
+                                </label>
+                                <button type="button" 
+                                        onclick="resetDefaultDimensions()" 
+                                        class="text-[10px] text-orange-700 hover:text-orange-900 font-bold underline cursor-pointer">
+                                    Reset Standar
+                                </button>
+                            </div>
+                            
+                            <div class="grid grid-cols-3 gap-2 sm:gap-3">
+                                {{-- Panjang (P) --}}
+                                <div>
+                                    <label class="block text-[11px] font-bold text-stone-700 mb-1">Panjang (P)</label>
+                                    <div class="relative flex items-center">
+                                        <input type="number" 
+                                               id="custom-length" 
+                                               value="{{ $defaultLength }}" 
+                                               min="10" 
+                                               max="600" 
+                                               oninput="updateCustomDimensionsLive()"
+                                               class="w-full pl-2.5 pr-7 py-2 bg-white text-xs font-bold text-stone-900 border border-stone-300 rounded-lg focus:border-orange-600 focus:ring-1 focus:ring-orange-600 outline-none">
+                                        <span class="absolute right-2 text-[10px] font-semibold text-stone-400 pointer-events-none">cm</span>
+                                    </div>
+                                </div>
+
+                                {{-- Lebar (L) --}}
+                                <div>
+                                    <label class="block text-[11px] font-bold text-stone-700 mb-1">Lebar (L)</label>
+                                    <div class="relative flex items-center">
+                                        <input type="number" 
+                                               id="custom-width" 
+                                               value="{{ $defaultWidth }}" 
+                                               min="10" 
+                                               max="600" 
+                                               oninput="updateCustomDimensionsLive()"
+                                               class="w-full pl-2.5 pr-7 py-2 bg-white text-xs font-bold text-stone-900 border border-stone-300 rounded-lg focus:border-orange-600 focus:ring-1 focus:ring-orange-600 outline-none">
+                                        <span class="absolute right-2 text-[10px] font-semibold text-stone-400 pointer-events-none">cm</span>
+                                    </div>
+                                </div>
+
+                                {{-- Tinggi (T) --}}
+                                <div>
+                                    <label class="block text-[11px] font-bold text-stone-700 mb-1">Tinggi (T)</label>
+                                    <div class="relative flex items-center">
+                                        <input type="number" 
+                                               id="custom-height" 
+                                               value="{{ $defaultHeight }}" 
+                                               min="10" 
+                                               max="600" 
+                                               oninput="updateCustomDimensionsLive()"
+                                               class="w-full pl-2.5 pr-7 py-2 bg-white text-xs font-bold text-stone-900 border border-stone-300 rounded-lg focus:border-orange-600 focus:ring-1 focus:ring-orange-600 outline-none">
+                                        <span class="absolute right-2 text-[10px] font-semibold text-stone-400 pointer-events-none">cm</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- Live Summary Info --}}
+                            <div class="mt-2.5 flex items-center justify-between text-[11px] text-stone-600 bg-white/90 p-2 rounded-lg border border-orange-200">
+                                <span class="text-stone-500 font-medium">Ukuran Kustom:</span>
+                                <span id="custom-dimension-badge" class="font-bold text-orange-700">
+                                    {{ $defaultLength }} cm (P) × {{ $defaultWidth }} cm (L) × {{ $defaultHeight }} cm (T)
+                                </span>
                             </div>
                         </div>
 
@@ -468,9 +553,17 @@
                                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                                 
                                 <div class="absolute top-1.5 left-1.5 flex flex-col gap-1">
-                                    <span class="px-1.5 py-0.5 bg-orange-600 text-white font-black text-[9px] uppercase tracking-wider rounded-xs">
-                                        NEW
-                                    </span>
+                                    @php
+                                        $relBadges = array_values(array_filter($rel['badges'] ?? ['NEW'], fn($b) => in_array($b, ['NEW', 'BEST SELLER'])));
+                                        if (empty($relBadges)) {
+                                            $relBadges = ['NEW'];
+                                        }
+                                    @endphp
+                                    @foreach($relBadges as $rbadge)
+                                        <span class="px-1.5 py-0.5 {{ $rbadge === 'BEST SELLER' ? 'bg-amber-600' : 'bg-orange-600' }} text-white font-black text-[9px] uppercase tracking-wider rounded-xs shadow-2xs">
+                                            {{ $rbadge }}
+                                        </span>
+                                    @endforeach
                                 </div>
                                 <div class="absolute top-0 right-0 bg-orange-500 text-white px-1.5 py-0.5 rounded-bl-lg font-black text-[10px]">
                                     -{{ $rel['discount'] }}%
@@ -584,6 +677,12 @@
 
 {{-- Detail Page Interactive Scripts --}}
 <script>
+    const defaultDim = {
+        length: {{ $defaultLength }},
+        width: {{ $defaultWidth }},
+        height: {{ $defaultHeight }}
+    };
+
     function changeMainImage(src, btn) {
         document.getElementById('main-product-img').src = src;
         document.querySelectorAll('.thumb-btn').forEach(b => {
@@ -621,23 +720,68 @@
         input.value = current;
     }
 
+    function updateCustomDimensionsLive() {
+        const lengthInput = document.getElementById('custom-length');
+        const widthInput = document.getElementById('custom-width');
+        const heightInput = document.getElementById('custom-height');
+
+        let p = parseInt(lengthInput?.value) || defaultDim.length;
+        let l = parseInt(widthInput?.value) || defaultDim.width;
+        let t = parseInt(heightInput?.value) || defaultDim.height;
+
+        const badge = document.getElementById('custom-dimension-badge');
+        if (badge) {
+            badge.innerText = `${p} cm (P) × ${l} cm (L) × ${t} cm (T)`;
+        }
+
+        const specPreview = document.getElementById('spec-dimension-preview');
+        if (specPreview) {
+            specPreview.innerText = `${p} x ${l} x ${t} cm (Custom)`;
+        }
+    }
+
+    function resetDefaultDimensions() {
+        const lengthInput = document.getElementById('custom-length');
+        const widthInput = document.getElementById('custom-width');
+        const heightInput = document.getElementById('custom-height');
+
+        if (lengthInput) lengthInput.value = defaultDim.length;
+        if (widthInput) widthInput.value = defaultDim.width;
+        if (heightInput) heightInput.value = defaultDim.height;
+
+        updateCustomDimensionsLive();
+    }
+
+    function getCustomVariationString() {
+        const activeVariationBtn = document.querySelector('.variant-btn.border-orange-600') || document.querySelector('.variant-btn.border-2');
+        const finish = activeVariationBtn ? activeVariationBtn.innerText.trim() : 'Natural Teak Wood';
+
+        const p = document.getElementById('custom-length')?.value || defaultDim.length;
+        const l = document.getElementById('custom-width')?.value || defaultDim.width;
+        const t = document.getElementById('custom-height')?.value || defaultDim.height;
+
+        return `${finish} • Ukuran: ${p}x${l}x${t} cm (P x L x T)`;
+    }
+
     function handleDetailAddToCart() {
         const qty = parseInt(document.getElementById('product-quantity')?.value) || 1;
         const productId = {{ $product['id'] }};
-        const activeVariationBtn = document.querySelector('.variant-btn.border-orange-600') || document.querySelector('.variant-btn.border-2');
-        const variation = activeVariationBtn ? activeVariationBtn.innerText.trim() : null;
+        const variation = getCustomVariationString();
 
         addToCart(productId, qty, variation);
     }
 
-    async function handleDetailBuyNow() {
+    function handleDetailBuyNow() {
         const qty = parseInt(document.getElementById('product-quantity')?.value) || 1;
         const productId = {{ $product['id'] }};
-        const activeVariationBtn = document.querySelector('.variant-btn.border-orange-600') || document.querySelector('.variant-btn.border-2');
-        const variation = activeVariationBtn ? activeVariationBtn.innerText.trim() : null;
+        const variation = getCustomVariationString();
 
-        await addToCart(productId, qty, variation);
-        window.location.href = "{{ route('cart.index') }}";
+        const url = new URL("{{ route('checkout.index') }}", window.location.origin);
+        url.searchParams.set('product_id', productId);
+        url.searchParams.set('quantity', qty);
+        url.searchParams.set('variation', variation);
+
+        window.location.href = url.toString();
     }
 </script>
 

@@ -6,8 +6,8 @@
         <div class="max-w-7xl mx-auto flex items-center justify-between gap-3 overflow-hidden">
             <div class="flex items-center gap-2 min-w-0 truncate">
                 <span class="w-1.5 h-1.5 rounded-full bg-orange-600 shrink-0"></span>
-                <span class="truncate hidden md:inline">Gratis Ongkir &amp; Perakitan Area Jawa - Bali | Garansi Kayu Solid 5 Tahun</span>
-                <span class="truncate md:hidden">Gratis Ongkir &amp; Perakitan Jawa-Bali</span>
+                <span class="truncate hidden md:inline">Workshop Furniture Kayu Solid Bali | Custom Ukuran Langsung (P x L x T) &amp; Export SPK Excel</span>
+                <span class="truncate md:hidden">Custom Ukuran (P x L x T) &amp; Export SPK Excel</span>
             </div>
             <div class="hidden md:flex items-center space-x-3 text-[11px] text-stone-300 shrink-0">
                 <a href="#tracking" class="hover:text-orange-500 transition-colors flex items-center gap-1">

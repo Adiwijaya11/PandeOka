@@ -71,8 +71,8 @@
                     <div class="text-stone-300 text-[10px] sm:text-xs mt-0.5">Garansi Konstruksi</div>
                 </div>
                 <div>
-                    <div class="text-orange-400 font-bold text-xs sm:text-sm md:text-base">Gratis Ongkir</div>
-                    <div class="text-stone-300 text-[10px] sm:text-xs mt-0.5">Area Jawa &amp; Bali</div>
+                    <div class="text-orange-400 font-bold text-xs sm:text-sm md:text-base">Export Excel</div>
+                    <div class="text-stone-300 text-[10px] sm:text-xs mt-0.5">Rekap SPK Pembelian</div>
                 </div>
                 <div>
                     <div class="text-orange-400 font-bold text-xs sm:text-sm md:text-base">Custom Order</div>
@@ -151,10 +151,18 @@
                              loading="lazy"
                              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                         
-                        {{-- Badges Left --}}
+                        {{-- Badges Left: Only NEW and BEST SELLER --}}
                         <div class="absolute top-1.5 left-1.5 sm:top-2.5 sm:left-2.5 flex flex-col gap-1">
-                            @foreach($product['badges'] ?? ['BEST SELLER'] as $badge)
-                                <span class="px-1.5 py-0.5 {{ $badge === 'BEST SELLER' || $badge === 'NEW' ? 'bg-orange-600' : 'bg-stone-900' }} text-white font-black text-[9px] sm:text-[10px] tracking-wider uppercase rounded-xs sm:rounded">
+                            @php
+                                $cardBadges = array_values(array_filter($product['badges'] ?? [], function($b) {
+                                    return in_array(strtoupper(trim($b)), ['NEW', 'BEST SELLER']);
+                                }));
+                                if (empty($cardBadges)) {
+                                    $cardBadges = [$product['id'] % 2 === 0 ? 'BEST SELLER' : 'NEW'];
+                                }
+                            @endphp
+                            @foreach($cardBadges as $badge)
+                                <span class="px-1.5 py-0.5 {{ $badge === 'BEST SELLER' ? 'bg-orange-600' : 'bg-stone-900' }} text-white font-black text-[9px] sm:text-[10px] tracking-wider uppercase rounded-xs sm:rounded">
                                     {{ $badge }}
                                 </span>
                             @endforeach
@@ -172,7 +180,7 @@
                             <div class="flex items-center justify-between text-[10px] sm:text-[11px] text-stone-500 mb-1">
                                 <span class="uppercase font-semibold tracking-wider text-orange-600">{{ $product['category'] }}</span>
                                 <span class="flex items-center text-amber-500 font-bold shrink-0 ml-1">
-                                    â˜… {{ $product['rating'] }} <span class="text-stone-400 font-normal ml-0.5 hidden xs:inline sm:inline">({{ $product['reviews_count'] }})</span>
+                                    ★ {{ $product['rating'] }} <span class="text-stone-400 font-normal ml-0.5 hidden xs:inline sm:inline">({{ $product['reviews_count'] }})</span>
                                 </span>
                             </div>
 
