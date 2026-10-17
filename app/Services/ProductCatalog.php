@@ -49,7 +49,7 @@ class ProductCatalog
                     'Cover bantal dudukan dan sandaran dapat dilepas dan dicuci (zipper)',
                     'Kaki sofa dilengkapi bantalan pelindung lantai anti-gores',
                 ],
-                'badges' => ['NEW', 'BEST SELLER', 'GRATIS ONGKIR'],
+                'badges' => ['NEW', 'BEST SELLER'],
             ],
             [
                 'id' => 2,
@@ -82,7 +82,7 @@ class ProductCatalog
                     'Kaki besi kokoh dengan adjustable leveler untuk lantai miring',
                     'Kapasitas duduk leluasa untuk 6 hingga 8 orang',
                 ],
-                'badges' => ['NEW', 'LIVE EDGE', 'GRATIS ONGKIR'],
+                'badges' => ['BEST SELLER'],
             ],
             [
                 'id' => 3,
@@ -148,7 +148,7 @@ class ProductCatalog
                     'Headboard ramping dengan kemiringan ergonomis untuk membaca',
                     'Finishing ramah lingkungan, aman bagi anak & pernapasan',
                 ],
-                'badges' => ['NEW', 'KAYU JATI TPK', 'GRATIS ONGKIR'],
+                'badges' => ['BEST SELLER'],
             ],
             [
                 'id' => 5,
@@ -180,7 +180,7 @@ class ProductCatalog
                     'Slot grommet kabel rapi di pojok belakang meja',
                     'Tinggi ergonomis 75 cm sesuai standar postur duduk sehat',
                 ],
-                'badges' => ['NEW', 'ERGONOMIS'],
+                'badges' => ['NEW'],
             ],
             [
                 'id' => 6,
@@ -212,7 +212,7 @@ class ProductCatalog
                     '2 kompartemen pintu geser dan 2 laci penyimpanan serbaguna',
                     'Lubang manajemen kabel di panel belakang',
                 ],
-                'badges' => ['NEW', 'ROTAN JEPARA'],
+                'badges' => ['BEST SELLER'],
             ],
             [
                 'id' => 7,
@@ -243,7 +243,7 @@ class ProductCatalog
                     'Top table kayu utuh bundar tanpa tepi tajam (ramah anak)',
                     'Dapat digeser dan dikonfigurasi fleksibel sesuai kebutuhan ruang',
                 ],
-                'badges' => ['NEW', 'SET DUO'],
+                'badges' => ['NEW'],
             ],
             [
                 'id' => 8,
@@ -274,7 +274,7 @@ class ProductCatalog
                     'Kayu jati solid pilihan tahan tumpahan cairan dan goresan',
                     'Bantalan kursi empuk dilapisi kain linen anti panas',
                 ],
-                'badges' => ['NEW', 'SET LENGKAP', 'GRATIS ONGKIR'],
+                'badges' => ['BEST SELLER'],
             ],
             [
                 'id' => 9,
@@ -304,7 +304,7 @@ class ProductCatalog
                     'Kapasitas lapang untuk pakaian gantung maupun lipat',
                     'Kayu jati padat tidak berjamur saat musim hujan',
                 ],
-                'badges' => ['NEW', 'SLIDING DOOR'],
+                'badges' => ['NEW'],
             ],
             [
                 'id' => 10,
@@ -394,7 +394,7 @@ class ProductCatalog
                     'Cermin kaca Asahi 5mm jernih tanpa distorsi bayangan',
                     'Laci dengan sekat khusus perlengkapan rias',
                 ],
-                'badges' => ['NEW', 'FULL SET'],
+                'badges' => ['BEST SELLER'],
             ],
             [
                 'id' => 13,
@@ -454,7 +454,7 @@ class ProductCatalog
                     'Pijakan kaki melingkar kokoh untuk kenyamanan duduk berlama-lama',
                     'Bantalan karet pada kaki anti slip dan ramah keramik',
                 ],
-                'badges' => ['NEW', 'HEMAT 20%'],
+                'badges' => ['BEST SELLER'],
             ],
             [
                 'id' => 15,
@@ -544,7 +544,7 @@ class ProductCatalog
                     'Sandaran tinggi menopang punggung dan leher secara rileks',
                     'Kayu jati solid bebas retak dan tahan cuaca tropis',
                 ],
-                'badges' => ['NEW', 'RELAX'],
+                'badges' => ['BEST SELLER'],
             ],
             [
                 'id' => 18,
@@ -574,7 +574,7 @@ class ProductCatalog
                     'Pagar pengaman ranjang atas kokoh anti jatuh',
                     'Finishing non-toxic bersertifikasi aman untuk anak',
                 ],
-                'badges' => ['NEW', 'MODULAR'],
+                'badges' => ['NEW'],
             ],
             [
                 'id' => 19,
@@ -604,7 +604,7 @@ class ProductCatalog
                     'Top table kayu suar alami mewah berkarakter kokoh',
                     'Anti-collision sensor otomatis berhenti jika menyentuh hambatan',
                 ],
-                'badges' => ['NEW', 'SMART DESK'],
+                'badges' => ['BEST SELLER'],
             ],
             [
                 'id' => 20,
@@ -694,7 +694,7 @@ class ProductCatalog
                     'Kaca bevel Asahi 5mm jernih dengan lapisan anti-shatter safe film',
                     'Membuat ruangan tampak 2x lebih luas dan bercahaya',
                 ],
-                'badges' => ['NEW', 'FULL BODY'],
+                'badges' => ['BEST SELLER'],
             ],
             [
                 'id' => 23,
@@ -724,7 +724,7 @@ class ProductCatalog
                     'Meja dan kursi dapat dilipat praktis saat disimpan',
                     'Hardware engsel berbahan kuningan anti karat',
                 ],
-                'badges' => ['NEW', 'OUTDOOR'],
+                'badges' => ['NEW'],
             ],
             [
                 'id' => 24,
@@ -754,7 +754,7 @@ class ProductCatalog
                     'Bantalan kulit sintetis empuk dan tidak gerah',
                     'Konstruksi jati solid mantap tanpa goyangan',
                 ],
-                'badges' => ['NEW', 'ERGONOMIS'],
+                'badges' => ['BEST SELLER'],
             ],
         ];
     }

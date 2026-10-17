@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Keranjang Belanja - Pande Oka Furniture Official Store')
-@section('meta_description', 'Keranjang belanja furniture kayu jati & sungkai solid resmi Pande Oka. Nikmati gratis ongkir dan promo cicilan 0%.')
+@section('meta_description', 'Keranjang belanja furniture kayu solid resmi Pande Oka. Pesanan langsung diterbitkan ke SPK Excel untuk produksi dan serah terima workshop.')
 
 @section('content')
 
@@ -32,14 +32,15 @@
             </a>
         </div>
 
-        {{-- Shopee Free Shipping Notification Bar --}}
+        {{-- Workshop SPK Excel Notice Bar (Tanpa Pengiriman Ekspedisi) --}}
         <div class="bg-orange-50 border border-orange-200 rounded-xl p-3.5 sm:p-4 mb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-stone-800">
             <div class="flex items-center gap-2.5">
-                <span class="px-2 py-0.5 bg-orange-600 text-white font-black text-[10px] rounded uppercase tracking-wider shrink-0">
-                    Gratis Ongkir
+                <span class="px-2 py-0.5 bg-orange-600 text-white font-black text-[10px] rounded uppercase tracking-wider shrink-0 flex items-center gap-1">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    <span>OUTPUT EXCEL</span>
                 </span>
                 <span class="text-stone-700">
-                    Selamat! Pesanan Anda memenuhi syarat <strong>Bebas Ongkir &amp; Instalasi Area Jawa - Bali</strong>.
+                    <strong>Tanpa Pengiriman Ekspedisi:</strong> Saat checkout / beli, pesanan otomatis diterbitkan dalam format <strong>SPK Excel (.xls)</strong> lengkap dengan ukuran custom (P x L x T) untuk serah-terima workshop.
                 </span>
             </div>
             <a href="{{ url('/') }}" class="text-orange-600 font-bold hover:underline shrink-0 flex items-center gap-1">
@@ -355,8 +356,11 @@
                 <button type="button" 
                         id="shopee-checkout-btn"
                         onclick="proceedToShopeeCheckout()"
-                        class="py-3 sm:py-3.5 px-6 sm:px-10 bg-orange-600 hover:bg-orange-700 text-white font-black text-xs sm:text-sm uppercase tracking-wider rounded-lg transition-colors shadow-sm shrink-0">
-                    Checkout (<span id="checkout-btn-count">{{ $summary['selected_count'] ?? 0 }}</span>)
+                        class="py-3 sm:py-3.5 px-6 sm:px-8 bg-orange-600 hover:bg-orange-700 text-white font-black text-xs sm:text-sm uppercase tracking-wider rounded-lg transition-colors shadow-sm shrink-0 flex items-center gap-2 active:scale-95">
+                    <span>Checkout / Beli (<span id="checkout-btn-count">{{ $summary['selected_count'] ?? 0 }}</span>)</span>
+                    <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                    </svg>
                 </button>
             </div>
 
@@ -364,6 +368,60 @@
     </div>
 </div>
 @endif
+
+{{-- Purchase Success & Excel SPK Downloaded Modal --}}
+<div id="excel-success-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
+    <div class="fixed inset-0 bg-stone-900/60 backdrop-blur-xs transition-opacity" onclick="closeExcelSuccessModal()"></div>
+    <div class="relative bg-white rounded-2xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-stone-200 z-10 text-center animate-in fade-in zoom-in duration-200">
+        
+        <div class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4 ring-8 ring-green-50">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+            </svg>
+        </div>
+
+        <span class="px-2.5 py-1 bg-orange-100 text-orange-700 font-bold text-[10px] sm:text-xs rounded-full uppercase tracking-wider">
+            Format Output Excel Workshop
+        </span>
+
+        <h3 class="text-xl sm:text-2xl font-black text-stone-900 mt-2 tracking-tight">
+            Pesanan Berhasil Diproses!
+        </h3>
+
+        <p class="text-stone-600 text-xs sm:text-sm mt-2 leading-relaxed">
+            Surat Perintah Kerja (SPK) format <strong>Excel (.xls)</strong> telah otomatis diunduh ke perangkat Anda. 
+            Karena <strong>tidak ada pengiriman ekspedisi</strong>, silakan bawa file Excel ini ke workshop Pande Oka untuk serah-terima produk.
+        </p>
+
+        <div class="bg-stone-50 border border-stone-200 rounded-xl p-3.5 my-5 text-left text-xs space-y-1.5">
+            <div class="flex justify-between text-stone-500">
+                <span>Status Pengiriman:</span>
+                <strong class="text-stone-900">Tanpa Pengiriman (Self-Pickup)</strong>
+            </div>
+            <div class="flex justify-between text-stone-500">
+                <span>Alamat Workshop:</span>
+                <span class="text-stone-800 text-right font-medium">Jl. Sunset Road No. 88, Kuta, Bali</span>
+            </div>
+            <div class="flex justify-between text-stone-500">
+                <span>Total Pesanan:</span>
+                <strong class="text-orange-600 text-sm" id="modal-success-total">Rp 0</strong>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <button type="button" 
+                    onclick="window.location.reload()" 
+                    class="w-full py-3 px-4 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase tracking-wider rounded-xl transition-all shadow-xs">
+                Perbarui Keranjang
+            </button>
+            <a href="{{ url('/') }}" 
+               class="w-full py-3 px-4 bg-stone-100 hover:bg-stone-200 text-stone-800 font-bold text-xs uppercase tracking-wider rounded-xl transition-all flex items-center justify-center">
+                Belanja Produk Lain
+            </a>
+        </div>
+
+    </div>
+</div>
 
 @push('scripts')
 <script>
@@ -647,7 +705,7 @@
         }
     }
 
-    // Proceed to Checkout
+    // Proceed to Checkout: Navigate to Beli Sekarang / Checkout Page
     function proceedToShopeeCheckout() {
         const checked = document.querySelectorAll('.item-checkbox:checked');
         if (checked.length === 0) {
@@ -655,8 +713,27 @@
             return;
         }
 
-        const grandTotal = document.getElementById('shopee-grand-total')?.innerText || 'Rp 0';
-        alert(`Mengarahkan ke Halaman Checkout & Pembayaran Resmi Pande Oka...\n\nTotal Pembayaran: ${grandTotal}\nBebas Ongkir: Aktif (Seluruh Jawa-Bali)\nGaransi: 5 Tahun Kayu Solid`);
+        const voucherCode = document.getElementById('voucher-input')?.value.trim() || 'PANDEOKA2026';
+        window.location.href = "{{ route('checkout.index') }}?voucher=" + encodeURIComponent(voucherCode);
+    }
+
+    function openExcelSuccessModal(grandTotal) {
+        const modal = document.getElementById('excel-success-modal');
+        const totalSpan = document.getElementById('modal-success-total');
+        if (totalSpan) totalSpan.innerText = grandTotal;
+        if (modal) {
+            modal.classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+        }
+    }
+
+    function closeExcelSuccessModal() {
+        const modal = document.getElementById('excel-success-modal');
+        if (modal) {
+            modal.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+            window.location.reload();
+        }
     }
 
     // Initial check on page load

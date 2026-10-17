@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'New Arrivals 2026 - Koleksi Furniture Kayu Solid Terbaru | Pande Oka')
-@section('meta_description', 'Katalog New Arrivals furniture kayu jati & sungkai solid 2026. Desain modern ala Shopee dengan promo diskon hingga 25%, voucher toko, dan gratis ongkir Jawa - Bali.')
+@section('meta_description', 'Katalog New Arrivals furniture kayu jati & sungkai solid 2026. Custom dimensi langsung (P x L x T), promo voucher toko, dan output SPK Excel workshop.')
 
 @section('content')
 
@@ -142,10 +142,18 @@
                              loading="lazy"
                              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                         
-                        {{-- Badges Left --}}
+                        {{-- Badges Left: Only NEW and BEST SELLER --}}
                         <div class="absolute top-1.5 left-1.5 sm:top-2 sm:left-2 flex flex-col gap-1">
-                            @foreach($product['badges'] ?? ['NEW'] as $badge)
-                                <span class="px-1.5 py-0.5 {{ $badge === 'NEW' ? 'bg-orange-600' : 'bg-stone-900' }} text-white font-black text-[9px] sm:text-[10px] tracking-wider uppercase rounded-xs">
+                            @php
+                                $cardBadges = array_values(array_filter($product['badges'] ?? [], function($b) {
+                                    return in_array(strtoupper(trim($b)), ['NEW', 'BEST SELLER']);
+                                }));
+                                if (empty($cardBadges)) {
+                                    $cardBadges = ['NEW'];
+                                }
+                            @endphp
+                            @foreach($cardBadges as $badge)
+                                <span class="px-1.5 py-0.5 {{ $badge === 'BEST SELLER' ? 'bg-orange-600' : 'bg-stone-900' }} text-white font-black text-[9px] sm:text-[10px] tracking-wider uppercase rounded-xs">
                                     {{ $badge }}
                                 </span>
                             @endforeach

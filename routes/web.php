@@ -18,6 +18,13 @@ Route::patch('/cart/{id}', [CartController::class, 'update'])->name('cart.update
 Route::post('/cart/toggle-all', [CartController::class, 'toggleAll'])->name('cart.toggle-all');
 Route::delete('/cart/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
 Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
+Route::match(['get', 'post'], '/cart/checkout/excel', [CartController::class, 'checkoutExcel'])->name('cart.checkout.excel');
+
+use App\Http\Controllers\CheckoutController;
+
+Route::get('/beli-sekarang', [CheckoutController::class, 'index'])->name('checkout.index');
+Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.buy-now');
+Route::post('/beli-sekarang/proses', [CheckoutController::class, 'process'])->name('checkout.process');
 
 Route::get('/new-arrivals', function () {
     $products = ProductCatalog::all();
